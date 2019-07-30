@@ -84,12 +84,11 @@ class CMailBox
             m_uAuthz = n;
         }
 
-        inline void SetFd(int fd)
+		inline void SetFd(int fd)
         {
             m_fd = fd;
         }
-
-        inline int GetFd() const
+		inline int GetFd() const
         {
             return m_fd;
         }
@@ -246,11 +245,7 @@ class CMailBox
         uint16_t m_id;
         bool m_bConnected;
         
-#ifndef _WIN32
 		int m_fd;
-#else
-		HANDLE m_fd;
-#endif
         EFDTYPE m_fdType;
         string m_serverName;
         uint16_t m_serverPort;

@@ -15,6 +15,12 @@ set(HEADER_FILES
 	${HEADER_FILES_PREFIX}/defparser.h
 	${HEADER_FILES_PREFIX}/md5.h
 	${HEADER_FILES_PREFIX}/json_helper.h
+	${HEADER_FILES_PREFIX}/logger.h
+	${HEADER_FILES_PREFIX}/lua_bitset.h
+	${HEADER_FILES_PREFIX}/lua_mogo.h
+	${HEADER_FILES_PREFIX}/lua_mogo_impl.h
+	${HEADER_FILES_PREFIX}/mailbox.h
+	${HEADER_FILES_PREFIX}/memory_pool.h
 
 )
 
@@ -30,6 +36,11 @@ set(SOURCE_FILES
 	${SOURCE_FILES_PREFIX}/defparser.cpp
 	${SOURCE_FILES_PREFIX}/md5.cpp
 	${SOURCE_FILES_PREFIX}/json_helper.cpp
+	${SOURCE_FILES_PREFIX}/logger.cpp
+	${SOURCE_FILES_PREFIX}/lua_bitset.cpp
+	${SOURCE_FILES_PREFIX}/lua_mogo.cpp
+	${SOURCE_FILES_PREFIX}/mailbox.cpp
+	${SOURCE_FILES_PREFIX}/memory_pool.cpp
 
 )
 

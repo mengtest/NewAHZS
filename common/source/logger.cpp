@@ -109,6 +109,11 @@ ostream& EndFile(ostream& logger)
 //获得当前时间的格式化的时分秒毫秒 HH:MM:SS.UUUUUU
 void _get_time_hmsu_head(char* s, size_t n)
 {
+#ifdef _WIN32
+	time_t t = time(NULL);
+	struct tm* tm2 = localtime(&t);
+	snprintf(s, n, "%02d:%02d:%02d.000000", tm2->tm_hour, tm2->tm_min, tm2->tm_sec);
+#else
 	struct timeval tv;
 	if (gettimeofday(&tv, NULL) == 0)
 	{
@@ -121,6 +126,7 @@ void _get_time_hmsu_head(char* s, size_t n)
 	{
 		snprintf(s, n, "??:??:??.??????");
 	}
+#endif
 
 }
 
@@ -197,8 +203,9 @@ void Log2File(const char* section, const char* key, const char* msg, va_list& ap
 		else
 		{
 			//dbmgr的多线程日志要加锁
-			CMutexGuard gm(*g_logger_mutex);
+			g_logger_mutex->lock();
 			g_logger.NewLine(nFileType) << szTmp << EndLine;
+			g_logger_mutex->unlock();
 		}
 	}
 	else

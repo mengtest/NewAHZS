@@ -2473,6 +2473,7 @@ int LuaGetTickCount(lua_State* L)
 
 int LuaConfirm(lua_State* L)
 {
+#ifndef _WIN32
 	if (lua_type(L, 1) == LUA_TBOOLEAN)
 	{
 		MG_CONFIRM(lua_toboolean(L, 1) != 0, "Lua Assert Error!");
@@ -2481,6 +2482,7 @@ int LuaConfirm(lua_State* L)
 	{
 		MG_CONFIRM(luaL_checkinteger(L, 1) != 0, "Lua Assert Error!");
 	}
+#endif
 	return 0;
 }
 
