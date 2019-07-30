@@ -20,6 +20,7 @@ bool JsonHelper::_Parse()
 {
 	m_json = cJSON_Parse(m_str_json.c_str());
 	b_parse = true;
+	return true;
 }
 
 

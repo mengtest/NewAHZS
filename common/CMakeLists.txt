@@ -14,6 +14,7 @@ set(HEADER_FILES
 	${HEADER_FILES_PREFIX}/debug.h
 	${HEADER_FILES_PREFIX}/defparser.h
 	${HEADER_FILES_PREFIX}/md5.h
+	${HEADER_FILES_PREFIX}/json_helper.h
 
 )
 
@@ -28,6 +29,7 @@ set(SOURCE_FILES
 	${SOURCE_FILES_PREFIX}/debug.cpp
 	${SOURCE_FILES_PREFIX}/defparser.cpp
 	${SOURCE_FILES_PREFIX}/md5.cpp
+	${SOURCE_FILES_PREFIX}/json_helper.cpp
 
 )
 
