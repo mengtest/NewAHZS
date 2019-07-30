@@ -13,15 +13,11 @@
 
 bool MogoSetNonblocking(int sockfd)
 {
-	return fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFD, 0) | O_NONBLOCK) != -1;
-#ifndef _WIN32
-	int flags;
-	if (-1 == (flags = fcntl(fd, F_GETFL, 0)))
-		flags = 0;
-	return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+#ifdef _WIN32
+	int flag = 1;
+	return ioctlsocket(sockfd, FIONBIO, (unsigned long*)& flag);
 #else
-	unsigned long flags = 1; /* 这里根据需要设置成0或1 */
-	return ioctlsocket(fd, FIONBIO, &flags);
+	return fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFD, 0) | O_NONBLOCK) != -1;
 #endif
 }
 
@@ -48,7 +44,12 @@ int MogoBind(int sockfd, const char* pszAddr, unsigned int unPort)
 
 	int flag = 1;
 	int len = sizeof(int);
+
+#ifdef _WIN32
+	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const char*)& flag, len);
+#else
 	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &flag, len);
+#endif
 	return bind(sockfd, (struct sockaddr*)&addr, sizeof(addr));
 }
 
@@ -70,16 +71,27 @@ int MogoConnect(int fd, const char* pszAddr, unsigned int unPort)
 
 void MogoSetBuffSize(int fd, int nRcvBuf, int nSndBuf)
 {
-	setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (const int*)&nRcvBuf, sizeof(int));
-	setsockopt(fd, SOL_SOCKET, SO_SNDBUF, (const int*)&nSndBuf, sizeof(int));
+#ifdef _WIN32
+	setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (const char*)& nRcvBuf, sizeof(int));
+	setsockopt(fd, SOL_SOCKET, SO_SNDBUF, (const char*)& nSndBuf, sizeof(int));
+#else
+	setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (const int*)& nRcvBuf, sizeof(int));
+	setsockopt(fd, SOL_SOCKET, SO_SNDBUF, (const int*)& nSndBuf, sizeof(int));
+#endif
 }
 
 void MogoGetBuffSize(int fd)
 {
 	int n1 = 0, n2 = 0;
 	socklen_t nn1 = sizeof(n1), nn2 = sizeof(n2);
-	getsockopt(fd, SOL_SOCKET, SO_RCVBUF, (int*)&n1, &nn1);
-	getsockopt(fd, SOL_SOCKET, SO_SNDBUF, (int*)&n2, &nn2);
+
+#ifdef _WIN32
+	getsockopt(fd, SOL_SOCKET, SO_RCVBUF, (char*)& n1, &nn1);
+	getsockopt(fd, SOL_SOCKET, SO_SNDBUF, (char*)& n2, &nn2);
+#else
+	getsockopt(fd, SOL_SOCKET, SO_RCVBUF, (int*)& n1, &nn1);
+	getsockopt(fd, SOL_SOCKET, SO_SNDBUF, (int*)& n2, &nn2);
+#endif
 	//printf("222fd=%d;rcv=%d;snd=%d\n", fd, n1, n2);
 }
 

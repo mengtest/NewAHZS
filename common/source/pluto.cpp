@@ -1086,7 +1086,7 @@ CPluto& CPluto::FillPlutoFromLua(VTYPE vt, lua_State* L, int idx)
         {
             //todo, 检查整数系列的类型是否正确,不能直接就转换类型
             int n = luaL_checkint(L, idx);
-            MG_ASSERT(n >= 0 && n <= UINT8_MAX, "uint8数值溢出");
+			assert(n >= 0 && n <= UINT8_MAX, "uint8 overfloat");
             u << (uint8_t)n;
             //printf("arg: idx = %d ; value = %d \n", idx, n);
             break;
@@ -1094,7 +1094,7 @@ CPluto& CPluto::FillPlutoFromLua(VTYPE vt, lua_State* L, int idx)
         case V_UINT16:
         {
             int n = luaL_checkint(L, idx);
-            MG_ASSERT(n >= 0 && n <= UINT16_MAX, "uint16数值溢出");
+			MG_ASSERT(n >= 0 && n <= UINT16_MAX, "uint16 overfloat");
             u << (uint16_t)n;
             //printf("arg: idx = %d ; value = %d \n", idx, n);
             break;
@@ -1117,7 +1117,7 @@ CPluto& CPluto::FillPlutoFromLua(VTYPE vt, lua_State* L, int idx)
         {
             //todo, 检查整数系列的类型是否正确,不能直接就转换类型
             int n = luaL_checkint(L, idx);
-            MG_ASSERT(n >= INT8_MIN && n <= INT8_MAX, "int8数值溢出");
+            MG_ASSERT(n >= INT8_MIN && n <= INT8_MAX, "int8 overfloat");
             u << (int8_t)n;
             //printf("arg: idx = %d ; value = %d \n", idx, n);
             break;
@@ -1125,7 +1125,7 @@ CPluto& CPluto::FillPlutoFromLua(VTYPE vt, lua_State* L, int idx)
         case V_INT16:
         {
             int n = luaL_checkint(L, idx);
-            MG_ASSERT(n >= INT16_MIN && n <= INT16_MAX, "int16数值溢出");
+			MG_ASSERT(n >= INT16_MIN && n <= INT16_MAX, "int16 overfloat");
             u << (int16_t)n;
             //printf("arg: idx = %d ; value = %d \n", idx, n);
             break;
@@ -1415,13 +1415,13 @@ bool CPlutoList::InitMutex()
 
 void CPlutoList::PushPluto(CPluto* p)
 {
-	CMutexGuard g(m_mutex_t);
+	std::lock_guard<std::mutex> lock(m_mutex_t);
 	m_list.push_back(p);
 }
 
 CPluto* CPlutoList::PopPluto()
 {
-	CMutexGuard g(m_mutex_t);
+	std::lock_guard<std::mutex> lock(m_mutex_t);
 	if(!m_list.empty())
 	{
 		CPluto* p = m_list.front();
@@ -1436,7 +1436,7 @@ CPluto* CPlutoList::PopPluto()
 
 bool CPlutoList::Empty()
 {
-	CMutexGuard g(m_mutex_t);
+	std::lock_guard<std::mutex> lock(m_mutex_t);
 	return m_list.empty();
 }
 

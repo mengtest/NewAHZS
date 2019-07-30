@@ -21,6 +21,9 @@ set(HEADER_FILES
 	${HEADER_FILES_PREFIX}/lua_mogo_impl.h
 	${HEADER_FILES_PREFIX}/mailbox.h
 	${HEADER_FILES_PREFIX}/memory_pool.h
+	${HEADER_FILES_PREFIX}/net_util.h
+	${HEADER_FILES_PREFIX}/path_founder.h
+	${HEADER_FILES_PREFIX}/pluto.h
 
 )
 
@@ -41,6 +44,9 @@ set(SOURCE_FILES
 	${SOURCE_FILES_PREFIX}/lua_mogo.cpp
 	${SOURCE_FILES_PREFIX}/mailbox.cpp
 	${SOURCE_FILES_PREFIX}/memory_pool.cpp
+	${SOURCE_FILES_PREFIX}/net_util.cpp
+	${SOURCE_FILES_PREFIX}/path_founder.cpp
+	${SOURCE_FILES_PREFIX}/pluto.cpp
 
 )
 

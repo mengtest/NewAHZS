@@ -5,7 +5,7 @@
 //pluto:冥王星,离太阳最远的行星,跑得最慢
 //Mercury:水星,离太阳最近的行星,公转最快
 
-
+#include <cassert>
 #include "type_mogo.h"
 #include "bitcryto.h"
 #include "memory_pool.h"
