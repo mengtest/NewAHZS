@@ -746,7 +746,10 @@ string CDefParser::CalcMd5OfAll(const char* pszDefFilePath)
 		}
 	}
 
-	enum{ SIZE16 = 16, };
+#ifdef _WIN32
+	return "";
+#else
+	enum { SIZE16 = 16, };
 	unsigned char szMd5[SIZE16];
 	const string& strOss = oss.str();
 	MD5((unsigned char*)strOss.c_str(), strOss.size(), szMd5);
@@ -759,6 +762,7 @@ string CDefParser::CalcMd5OfAll(const char* pszDefFilePath)
 	}
 
 	return string(szKey);
+#endif
 }
 
 

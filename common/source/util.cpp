@@ -9,17 +9,21 @@
 //----------------------------------------------------------------*/
 
 #include <stdarg.h>
+#ifdef _WIN32
+#include <direct.h>
+#else
 #include <sys/time.h>
 #include <sys/stat.h>
+#endif
 
-#include "util.h"
+#include "../header/util.h"
 using namespace std;
 
 
 
 string& Ltrim(string& s)
 {
-	int(*func)(int) = isspace;
+	int (*func)(int) = isspace;
 
 	string::iterator iter;
 	iter = find_if(s.begin(), s.end(), not1(ptr_fun(func)));
@@ -31,7 +35,7 @@ string& Ltrim(string& s)
 
 string& Rtrim(string& s)
 {
-	int(*func)(int) = isspace;
+	int (*func)(int) = isspace;
 
 	string::reverse_iterator iter;
 	iter = find_if(s.rbegin(), s.rend(), not1(ptr_fun(func)));
@@ -299,6 +303,21 @@ void CheckDir(const char* pszDirName, bool bLog /*= false*/)
 		cout << "输入目录名称为空!" << endl;
 	}
 
+#ifdef _WIN32
+	if (_mkdir(pszDirName) == -1)
+	{
+		if (bLog)
+		{
+			cout << "检测到存在目录:" << pszDirName << endl;
+		}
+	}
+	else
+	{
+		cout << "成功创建了目录:" << pszDirName << endl;
+	}
+#else
+
+
 	DIR* pDir = opendir(pszDirName);
 	if (pDir == NULL)
 	{
@@ -323,10 +342,16 @@ void CheckDir(const char* pszDirName, bool bLog /*= false*/)
 			cout << "检测到存在目录:" << pszDirName << endl;
 		}
 	}
+#endif
 }
 
 
+#ifdef _WIN32
+const char g_cPathSplit[2] = "\\";      //路径分隔符
+#else
 const char g_cPathSplit[2] = "/";       //路径分隔符
+#endif
+
 
 bool DayDiff(const string& strDayTime, int nClock)
 {
@@ -459,6 +484,7 @@ void GetYesterday(string& strYesterday)
 	return;
 }
 
+#ifndef _WIN32
 uint32_t _GetTickCount()
 {
 	struct timeval tv;
@@ -484,9 +510,116 @@ bool CheckSpeed(uint16_t speed, uint32_t timeDiff, float dis)
 		return true;
 	}
 }
+#endif
+
+#ifdef _WIN32	
+//windows 下实现 linux 的 timeval , 函数的实现
+static void get_base_time(LARGE_INTEGER* base_time)
+{
+	SYSTEMTIME st;
+	FILETIME ft;
+
+	memset(&st, 0, sizeof(st));
+	st.wYear = 1970;
+	st.wMonth = 1;
+	st.wDay = 1;
+	SystemTimeToFileTime(&st, &ft);
+
+	base_time->LowPart = ft.dwLowDateTime;
+	base_time->HighPart = ft.dwHighDateTime;
+	base_time->QuadPart /= SECS_TO_FT_MULT;
+}
+
+int win_gettimeofday(win_time_val_t* tv)
+{
+	SYSTEMTIME st;
+	FILETIME ft;
+	LARGE_INTEGER li;
+	static char get_base_time_flag = 0;
+
+	if (get_base_time_flag == 0)
+	{
+		get_base_time(&base_time);
+	}
+
+	/* Standard Win32 GetLocalTime */
+	GetLocalTime(&st);
+	SystemTimeToFileTime(&st, &ft);
+
+	li.LowPart = ft.dwLowDateTime;
+	li.HighPart = ft.dwHighDateTime;
+	li.QuadPart /= SECS_TO_FT_MULT;
+	li.QuadPart -= base_time.QuadPart;
+
+	tv->tv_sec = li.LowPart;
+	tv->tv_usec = st.wMilliseconds;
+
+	return 0;
+}
+
+int win_time(const win_time_val_t* tv, win_time_t* time)
+{
+	LARGE_INTEGER li;
+	FILETIME ft;
+	SYSTEMTIME st;
+
+	li.QuadPart = tv->tv_sec;
+	li.QuadPart += base_time.QuadPart;
+	li.QuadPart *= SECS_TO_FT_MULT;
+
+	ft.dwLowDateTime = li.LowPart;
+	ft.dwHighDateTime = li.HighPart;
+	FileTimeToSystemTime(&ft, &st);
+
+	time->year = st.wYear;
+	time->mon = st.wMonth - 1;
+	time->day = st.wDay;
+	time->wday = st.wDayOfWeek;
+
+	time->hour = st.wHour;
+	time->min = st.wMinute;
+	time->sec = st.wSecond;
+	time->msec = tv->tv_usec;
+
+	return 0;
+}
+
+
+// 下面两个 函数 需要重新实现
+CGetTimeOfDay::CGetTimeOfDay()
+{
+	m_v = new win_time_val_t();
+	win_gettimeofday(m_v);
+}
+
+CGetTimeOfDay::~CGetTimeOfDay()
+{
+	delete m_v;
+}
+
+void CGetTimeOfDay::SetNowTime()
+{
+	win_gettimeofday(m_v);
+}
+
+int CGetTimeOfDay::GetLapsedTime()
+{
+	win_time_val_t* v2 = new win_time_val_t;
+	win_gettimeofday(v2);
+	enum { e_micro_sec = 1000000, };
+	int n = (int)((v2->tv_sec - m_v->tv_sec) * e_micro_sec + v2->tv_usec - m_v->tv_usec);
+
+	if (m_v)
+	{
+		delete m_v;
+	}
+
+	m_v = v2;
+	return n;
+}
 
 //linux下用gettimeofday来计算时间
-
+#else
 CGetTimeOfDay::CGetTimeOfDay()
 {
 	m_v = new struct timeval;
@@ -514,7 +647,7 @@ int CGetTimeOfDay::GetLapsedTime()
 	struct timeval* v2 = new struct timeval;
 	this->GetTime(v2);
 	enum { e_micro_sec = 1000000, };
-	int n = (int)((v2->tv_sec - m_v->tv_sec)*e_micro_sec + v2->tv_usec - m_v->tv_usec);
+	int n = (int)((v2->tv_sec - m_v->tv_sec) * e_micro_sec + v2->tv_usec - m_v->tv_usec);
 
 	if (m_v)
 	{
@@ -524,3 +657,4 @@ int CGetTimeOfDay::GetLapsedTime()
 	m_v = v2;
 	return n;
 }
+#endif
