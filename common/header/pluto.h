@@ -10,8 +10,8 @@
 #include "bitcryto.h"
 #include "memory_pool.h"
 #include <ctype.h>
+#include <mutex>
 #include "util.h"
-#include "mutex.h"
 
 enum
 {
@@ -390,7 +390,7 @@ public:
 	bool Empty();
 
 private:
-	pthread_mutex_t m_mutex_t;
+	std::mutex m_mutex_t;
 	bool m_init;
 	std::list<CPluto*> m_list;
 };

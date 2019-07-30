@@ -2,7 +2,15 @@
 #define __EPOLL_SERVER_HEAD__
 
 
-#include <wepoll.h>
+#ifndef _WIN32
+
+#else
+#pragma comment(lib,"ws2_32.lib")
+#include "wepoll.h"
+#include <WinSock2.h>
+#include <ws2tcpip.h>
+#endif
+
 #include <time.h>
 
 #include "util.h"
@@ -128,7 +136,11 @@ public:
 #endif
 
 protected:
+#ifndef _WIN32
 	int m_epfd;
+#else
+	HANDLE m_epfd;
+#endif
 	map<int, CMailBox*> m_fds;
 	list<CPluto*> m_recvMsgs;
 	//list<CPluto*> m_sendMsgs;

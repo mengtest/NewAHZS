@@ -1,41 +1,25 @@
 cmake_minimum_required(VERSION 2.8)
 project(common)
  
-include_directories(
-    "${PROJECT_SOURCE_DIR}"
+include_directories(./ ./header ../lua ../include ../cell ../base)
+
+set(HEADER_FILES_PREFIX header)
+set(HEADER_FILES
+	${HEADER_FILES_PREFIX}/balance.h
+
 )
- 
-add_library (common
-    balance.cpp
-	base64.cpp
-	bitcryto.cpp
-	cfg_reader.cpp
-    cjson.cpp
-	debug.cpp
-	defparser.cpp
-	entity.cpp
-    entity_mgr.cpp
-	epoll_server.cpp
-	exception.cpp
-	json_helper.cpp
-    logger.cpp
-	lua_bitset.cpp
-	lua_mogo.cpp
-	mailbox.cpp
-    md5.cpp
-	memory_pool.cpp
-	mutex.cpp
-	net_util.cpp
-    path_founder.cpp
-	pluto.cpp
-	rpc_mogo.cpp
-	server_test.cpp
-    stopword.cpp
-	timer.cpp
-	timer_action.cpp
-	type_mogo.cpp
-    util.cpp
-	world.cpp
-	xmsg.cpp
-	xsem.cpp
+
+set(SOURCE_FILES_PREFIX source)
+set(SOURCE_FILES 
+    ${SOURCE_FILES_PREFIX}/balance.cpp
+
+)
+
+source_group(header FILES ${HEADER_FILES})
+source_group(source FILES ${SOURCE_FILES})
+
+# Target
+add_library(common
+    ${HEADER_FILES}
+    ${SOURCE_FILES}
 )

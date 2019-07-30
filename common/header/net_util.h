@@ -5,11 +5,21 @@
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <string.h>
+#ifndef _WIN32
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <string.h>
+#else
+#pragma comment(lib,"ws2_32.lib")
+#include "wepoll.h"
+#include <WinSock2.h>
+#include <ws2tcpip.h>
+#endif // !_WIN32
+
+
+
 
 
 #define ERROR_RETURN() \

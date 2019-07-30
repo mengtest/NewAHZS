@@ -55,8 +55,11 @@ class CMailBox
     public:
         //根据配置初始化
         bool init(const MailBoxConfig& cfg);
-        //
-        int ConnectServer(int epfd);
+#ifndef _WIN32
+		int ConnectServer(int epfd);
+#else
+		int ConnectServer(HANDLE epfd);
+#endif
 
         int SendAll();
 
@@ -243,7 +246,11 @@ class CMailBox
         uint16_t m_id;
         bool m_bConnected;
         
-        int m_fd;
+#ifndef _WIN32
+		int m_fd;
+#else
+		HANDLE m_fd;
+#endif
         EFDTYPE m_fdType;
         string m_serverName;
         uint16_t m_serverPort;

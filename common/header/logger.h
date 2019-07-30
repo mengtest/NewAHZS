@@ -12,7 +12,12 @@
 #include <fstream>
 #include <iostream>
 #include <ostream>
+#include <mutex>
+
+#ifndef _WIN32
 #include <sys/time.h>
+#endif // !_WIN32
+
 
 using std::ofstream;
 using std::ostream;
@@ -64,7 +69,7 @@ extern void Error(const char* level, const char* msg, ...);
 extern CLogger g_logger;
 
 //g_logger对应的线程锁
-extern pthread_mutex_t* g_logger_mutex;
+extern std::mutex* g_logger_mutex;
 
 
 #endif		// __LOGGER__HEAD__

@@ -112,7 +112,11 @@ bool CMailBox::init(const MailBoxConfig& cfg)
     return true;
 }
 
+#ifndef _WIN32
 int CMailBox::ConnectServer(int epfd)
+#else
+int CMailBox::ConnectServer(HANDLE epfd)
+#endif
 {
     //printf("%s:%d,%x\n", __FILE__, __LINE__, this);
     time_t tNow = time(NULL);
@@ -123,7 +127,11 @@ int CMailBox::ConnectServer(int epfd)
 
     if(m_fd > 0)
     {
-        close(m_fd);
+#ifndef _WIN32
+		int ret = close(m_fd);
+#else
+		int ret = closesocket(m_fd);
+#endif
     }
 
     m_fd = MogoSocket();
@@ -135,7 +143,7 @@ int CMailBox::ConnectServer(int epfd)
 
     struct epoll_event ev;
     memset(&ev, 0, sizeof ev);
-    ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+    ev.events = EPOLLIN | EPOLLOUT | EPOLLONESHOT;
     ev.data.fd = m_fd;
 
     if(epoll_ctl(epfd, EPOLL_CTL_ADD, m_fd, &ev) == -1)

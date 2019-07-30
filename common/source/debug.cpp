@@ -12,6 +12,10 @@
 #include <iostream>
 
 
+#define SIGUSR1  10
+#define SIGUSR2  12
+
+
 bool CDebug::s_bSignalOnce	= false;
 bool CDebug::s_bAutoDump	= false;
 
@@ -78,6 +82,7 @@ const std::string CDebug::BreakMsg(std::ostream& os, const char* fmt, ...)
 
 void CDebug::DebugBreakMsgHandle(const std::string& strMsg)
 {
+#ifndef _WIN32
 	sigset_t set;
 	sigemptyset(&set);
 	sigaddset(&set, SIGALRM);
@@ -90,6 +95,7 @@ void CDebug::DebugBreakMsgHandle(const std::string& strMsg)
 		sprintf(pBuffer, "gcore %d > /dev/null", getpid());
 		system(pBuffer);
 	}
+#endif // !_WIN32
 }
 
 void CDebug::SignalHandle(int nSignal)
@@ -100,10 +106,12 @@ void CDebug::SignalHandle(int nSignal)
 
 void CDebug::UnBlock()
 {
+#ifndef _WIN32
 	sigset_t set;
 	sigemptyset(&set);
 	sigaddset(&set, SIGALRM);
 	sigprocmask(SIG_UNBLOCK, &set, NULL);
+#endif // !_WIN32
 }
 
 

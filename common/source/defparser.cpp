@@ -11,7 +11,9 @@
 #include "defparser.h"
 #include "pluto.h"
 #include "logger.h"
+#ifndef _WIN32
 #include <openssl/md5.h>
+#endif
 
 
 const string EMPTY_STRING = "";

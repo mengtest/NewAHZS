@@ -58,7 +58,11 @@ int CEpollServer::StartServer(const char* pszAddr, uint16_t unPort)
 	}
 
 	m_epfd = epoll_create(MAX_EPOLL_SIZE);
+#ifdef _WIN32
+	if (m_epfd == NULL)
+#else
 	if (m_epfd == -1)
+#endif
 	{
 		ERROR_RETURN2("Failed to epoll_create");
 	}
@@ -324,7 +328,7 @@ int CEpollServer::HandleNewConnection(int fd)
 	struct epoll_event ev;
 	memset(&ev, 0, sizeof ev);
 
-	ev.events = EPOLLIN | EPOLLET;
+	ev.events = EPOLLIN | EPOLLONESHOT;
 	ev.data.fd = new_fd;
 	if (epoll_ctl(m_epfd, EPOLL_CTL_ADD, new_fd, &ev) < 0)
 	{

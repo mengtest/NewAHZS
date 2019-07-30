@@ -1398,17 +1398,19 @@ CPlutoList::~CPlutoList()
 {
 	if(m_init)
 	{
-		pthread_mutex_destroy(&m_mutex_t);
+		m_mutex_t.unlock();
 	}
 }
 
 bool CPlutoList::InitMutex()
 {
-	if(!m_init)
-	{
-		m_init = pthread_mutex_init(&m_mutex_t, NULL) == 0;
-	}
-	return m_init;
+// 	if(!m_init)
+// 	{
+// 		m_init = pthread_mutex_init(&m_mutex_t, NULL) == 0;
+// 	}
+// 	return m_init;
+	
+	return true;
 }
 
 void CPlutoList::PushPluto(CPluto* p)

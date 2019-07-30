@@ -9,11 +9,10 @@
 //----------------------------------------------------------------*/
 
 #include "logger.h"
-#include "mutex.h"
 
 CLogger g_logger;  //全局变量
 
-pthread_mutex_t* g_logger_mutex = NULL;
+std::mutex* g_logger_mutex = NULL;
 
 
 CLogger::CLogger() : m_strFile(), m_strPath()

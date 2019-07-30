@@ -14,6 +14,15 @@
 bool MogoSetNonblocking(int sockfd)
 {
 	return fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFD, 0) | O_NONBLOCK) != -1;
+#ifndef _WIN32
+	int flags;
+	if (-1 == (flags = fcntl(fd, F_GETFL, 0)))
+		flags = 0;
+	return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+#else
+	unsigned long flags = 1; /* 这里根据需要设置成0或1 */
+	return ioctlsocket(fd, FIONBIO, &flags);
+#endif
 }
 
 int MogoSocket()

@@ -61,7 +61,41 @@
 #	define MG_VERIFY(expr, ...) ((void)(expr))
 #endif
 
+#ifdef _WIN32
+#pragma warning(disable:4065)
+#pragma warning(disable:4996)
 
+/*
+用malloc分配内存，在程序结束后自动回收
+see
+http://pdfrecompressor.googlecode.com/svn-history/r40/trunk/jbig2enc_modified/jbig2.cc
+*/
+// -----------------------------------------------------------------------------
+// Windows, sadly, lacks asprintf
+// -----------------------------------------------------------------------------
+#include <stdarg.h>
+static int asprintf(char** strp, const char* fmt, ...)
+{
+	va_list va;
+	va_start(va, fmt);
+	const int required = vsnprintf(NULL, 0, fmt, va);
+	char* const buffer = (char*)malloc(required + 1);
+	const int ret = vsnprintf(buffer, required + 1, fmt, va);
+	*strp = buffer;
+	va_end(va);
+	return ret;
+}
+
+static int vasprintf(char** strp, const char* fmt, va_list va)
+{
+	const int required = vsnprintf(NULL, 0, fmt, va);
+	char* const buffer = (char*)malloc(required + 1);
+	const int ret = vsnprintf(buffer, required + 1, fmt, va);
+	*strp = buffer;
+	return ret;
+}
+
+#endif
 
 class CDebug
 {
