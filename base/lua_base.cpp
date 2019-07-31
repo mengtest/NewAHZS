@@ -8,7 +8,11 @@
 // 模块描述：脚本层base相关
 //----------------------------------------------------------------*/
 
+#ifndef _WIN32
 #include <uuid/uuid.h>
+#else
+//#include <uuid.h>
+#endif
 #include "lua_base.h"
 #include "entity_base.h"
 #include "defparser.h"
@@ -686,18 +690,31 @@ int LoadEntitiesOfType(lua_State* L)
 
 int GetUuid(lua_State* L)
 {
-    uuid_t u;
-    uuid_generate(u);
+#ifdef _WIN32
+	int n1 = rand();
+	int n2 = rand();
+	int n3 = (int)(time(NULL) % 10000);
 
-    char s[sizeof(u)*2+1];
-    for(size_t i=0; i<sizeof(u); ++i)
-    {
-        char_to_sz(u[i], s+2*i);
-    }
-    s[sizeof(u)*2] = '\0';
+	char s[64];
+	memset(s, 0, sizeof(s));
+	snprintf(s, sizeof(s), "%d_%d_%d", n3, n1, n2);
 
-    lua_pushstring(L, s);
-    return 1;
+	lua_pushstring(L, s);
+	return 1;
+#else
+	uuid_t u;
+	uuid_generate(u);
+
+	char s[sizeof(u) * 2 + 1];
+	for (size_t i = 0; i < sizeof(u); ++i)
+	{
+		char_to_sz(u[i], s + 2 * i);
+	}
+	s[sizeof(u) * 2] = '\0';
+
+	lua_pushstring(L, s);
+	return 1;
+#endif
 }
 
 int GetRptName(lua_State* L)
@@ -848,18 +865,22 @@ int SetBaseData(lua_State* L)
 
 int GetTimeZone(lua_State* L)
 {
-    struct timezone tz;
-    if (gettimeofday(NULL, &tz) == 0)
-    {
-        lua_pushinteger(L, tz.tz_minuteswest);
-        return 1;
-    }
-    else
-    {
-        lua_pushstring(L, "get timezone error.");
-        lua_error(L);
-        return 0;
-    }
+#ifndef _WIN32
+	struct timezone tz;
+	if (gettimeofday(NULL, &tz) == 0)
+	{
+		lua_pushinteger(L, tz.tz_minuteswest);
+		return 1;
+	}
+	else
+	{
+		lua_pushstring(L, "get timezone error.");
+		lua_error(L);
+		return 0;
+	}
+#else
+	return 0;
+#endif
 }
 
 int BroadcastClientRpc(lua_State* L)
@@ -1023,15 +1044,6 @@ int LuaOpenMogoLibCBase (lua_State *L)
         {NULL, NULL}
     };
 
-#ifndef __LUA_5_2_1
-    luaL_register(L, s_szMogoLibName, mogoLib);
-    //luaL_register之后cw位于栈顶
-
-    lua_pushstring(L, "baseData");
-    lua_newtable(L);
-    lua_rawset(L, -3);
-
-#else
 
     //以下三行代码替换上面注释的代码语句。lua版本5.2中采用以下格式注册c函数，
     //5.1版本中采用上面的方法注册c函数
@@ -1043,8 +1055,6 @@ int LuaOpenMogoLibCBase (lua_State *L)
     lua_rawset(L, -3);
 
     lua_setglobal(L, s_szMogoLibName);
-
-#endif // !__LUA_5.2.1
 
     ClearLuaStack(L);
 

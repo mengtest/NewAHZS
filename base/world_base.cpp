@@ -9,10 +9,12 @@
 //----------------------------------------------------------------*/
 
 #include <stdlib.h>
+#ifndef _WIN32
 #include <sys/time.h>
 #include <openssl/md5.h>
 #include <openssl/rc4.h>
 #include <mysql.h>
+#endif
 #include "world_base.h"
 #include "lua_base.h"
 #include "type_mogo.h"
@@ -172,6 +174,22 @@ CEntityParent* CWorldBase::GetEntity(TENTITYID id)
 	return (CEntityParent*)m_enMgr.GetEntity(id);
 }
 
+#ifdef _WIN32
+void CWorldBase::_MakeKey(const string& strAccount, string& key, time_t& t2)
+{
+	//根据 帐户名/时间/随机数 生成一个md5码作为key
+	//todo,这里先做一个临时的
+	time_t t = time(NULL);
+	struct tm* tm1 = localtime(&t);
+	char szKey[64];
+	memset(szKey, 0, sizeof(szKey));
+	snprintf(szKey, sizeof(szKey), "%s_%04d-%02d-%02d %02d:%02d:%02d", strAccount.c_str(), tm1->tm_year + 1900, tm1->tm_mon + 1, \
+		tm1->tm_mday, tm1->tm_hour, tm1->tm_min, tm1->tm_sec);
+	key.assign(szKey);
+	t2 = t;
+}
+#else
+
 int __enc(char* buff, int len, char* buff2, int* len2)
 {
 	enum { SIZE16 = 16, };
@@ -221,6 +239,7 @@ void CWorldBase::_MakeKey(const string& strAccount, string& key, time_t& t2)
 	key.assign(szKey);
 	t2 = t;
 }
+#endif
 
 const string& CWorldBase::MakeClientLoginKey(const string& strAccount, TENTITYID eid)
 {
@@ -382,6 +401,7 @@ int CWorldBase::FromRpcCall(CPluto& u)
 		}
 		break;
 	}
+#ifndef _WIN32
 	case MSGID_BASEAPP_CLIENT_RELOGIN:
 	{
 		int fd = u.GetMailbox()->GetFd();
@@ -393,6 +413,7 @@ int CWorldBase::FromRpcCall(CPluto& u)
 		}
 		break;
 	}
+#endif
 	case MSGID_BASEAPP_LUA_DEBUG:
 	{
 		nRet = DebugLuaCode(p);
@@ -1724,6 +1745,7 @@ int CWorldBase::OnRedisHashLoad(T_VECTOR_OBJECT* p)
 //定时存盘功能
 int CWorldBase::TimeSave(T_VECTOR_OBJECT* p)
 {
+#ifndef _WIN32
 	bool flag = false;
 
 	struct timeval tv1;
@@ -1735,6 +1757,7 @@ int CWorldBase::TimeSave(T_VECTOR_OBJECT* p)
 	{
 		LogWarning("CWorldBase::TimeSave", "tv1 errno=%d;errstr=%s", errno, strerror(errno));
 	}
+#endif
 
 	int nAll = (int)m_lsTimeSave.size();   //entity总数
 	int nSaved = 0;                           //存盘数
@@ -1753,6 +1776,7 @@ int CWorldBase::TimeSave(T_VECTOR_OBJECT* p)
 			}
 			saved.push_back(eid);
 
+#ifndef _WIN32
 			if (flag)
 			{
 				struct timeval tv2;
@@ -1769,7 +1793,7 @@ int CWorldBase::TimeSave(T_VECTOR_OBJECT* p)
 					LogWarning("CWorldBase::TimeSave", "tv2 errno=%d;errstr=%s", errno, strerror(errno));
 				}
 			}
-
+#endif
 		}
 		else
 		{
@@ -1781,6 +1805,7 @@ int CWorldBase::TimeSave(T_VECTOR_OBJECT* p)
 
 	float cost = 0.0;
 
+#ifndef _WIN32
 	if (flag)
 	{
 		struct timeval tv3;
@@ -1793,7 +1818,7 @@ int CWorldBase::TimeSave(T_VECTOR_OBJECT* p)
 			LogWarning("CWorldBase::TimeSave", "tv3 errno=%d;errstr=%s", errno, strerror(errno));
 		}
 	}
-
+#endif
 
 	//LogInfo("CWorldBase::TimeSave", "all=%d;handle=%d;saved=%d;discard=%d;cost=%.6f", nAll, (int)saved.size(), nSaved, nDiscard, cost);
 

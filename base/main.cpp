@@ -7,7 +7,9 @@
 #include "debug.h"
 #include <signal.h>
 #include "lua_base.h"
+#ifndef _WIN32
 #include <uuid/uuid.h>
+#endif
 //#include "logger.h"
 //#include "memory_pool.h"
 
@@ -29,8 +31,10 @@ int main(int argc, char* argv[])
     //third args[3] is log file path
     const char* pszLogPath = argv[3];
 
-    signal(SIGPIPE, SIG_IGN);
+#ifndef _WIN32
+	signal(SIGPIPE, SIG_IGN);
 	CDebug::Init();
+#endif
 
     g_logger.SetLogPath(pszLogPath);
     CWorldBase& worldbase = GetWorldbase();
