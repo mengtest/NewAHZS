@@ -250,9 +250,11 @@ void CRpcUtil::InitInnerMethods()
 			p->m_argsType.push_back(V_STR);         //key
 			m_methods.insert(make_pair(MSGID_BASEAPP_CLIENT_LOGIN, p));
 
+#ifndef _WIN32
 			p = new _SEntityDefMethods;
 			p->m_argsType.push_back(V_STR);         //key
 			m_methods.insert(make_pair(MSGID_BASEAPP_CLIENT_RELOGIN, p));
+#endif
 
 			p = new _SEntityDefMethods;
 			p->m_argsType.push_back(V_STR);         //lua code

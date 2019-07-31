@@ -281,7 +281,7 @@ int CEpollServer::Service(const char* pszAddr, unsigned int unPort)
 void CEpollServer::OnShutdownServer()
 {
 	LogInfo("goto_shutdown", "shutdown after 2 seconds.");
-	sleep(2);
+	std::this_thread::sleep_for(std::chrono::seconds(2));
 }
 
 int CEpollServer::HandleNewConnection(int fd)
@@ -350,7 +350,12 @@ int CEpollServer::HandleMailboxEvent(int fd, uint32_t event, CMailBox* pmb)
 			int nConnErr = 0;
 			socklen_t _tl = sizeof(nConnErr);
 			//可写之后判断
+#ifndef _WIN32
 			if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &nConnErr, &_tl) == 0)
+#else
+			if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (char*)&nConnErr, &_tl) == 0)
+#endif // !_WIN32
+
 			{
 				if (nConnErr == 0)
 				{
@@ -1102,6 +1107,8 @@ int CEpollServer::HandleSendPluto()
 		CloseFdFromServer(fd);
 		ls4del.pop_front();
 	}
+
+	return 0;
 }
 
 //把剩余的pluto包发送完毕
@@ -1131,7 +1138,7 @@ int CEpollServer::HandleLeftPluto()
 		}
 
 		LogInfo("CEpollServer::HandleLeftPluto", "wait_1_second_to_send_left");
-		sleep(1);
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 
 	return 0;

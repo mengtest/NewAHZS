@@ -15,7 +15,9 @@
 #include "defparser.h"
 #include "lua_mogo.h"
 #include "timer.h"
+#ifndef _WIN32
 #include <termios.h>
+#endif
 #include "event.h"
 #include "epoll_server.h"
 
@@ -200,7 +202,11 @@ uint16_t world::GetServerPort(uint16_t sid)
 
 std::string world::ReadConsoleCmd()
 {
+#ifdef _WIN32
+	return "";
+#else
 	static ostringstream sstr;
+
 	char ch;
 	int oldf;
 	bool bFlag = false;
@@ -227,6 +233,7 @@ std::string world::ReadConsoleCmd()
 	sstr.clear();
 	sstr.str("");
 	return strRet;
+#endif
 }
 
 void world::DoConsoleLua()

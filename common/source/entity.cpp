@@ -208,6 +208,7 @@ int CEntityParent::lAddLocalTimer(lua_State* L)
 	CTimerActionBase& rAction = LuaTimerFactory(data);
 	uint64_t n64ActionID = GetWorld()->GetLocalTimer().AddAction(rAction);
 	lua_pushnumber(L, n64ActionID);
+	return 0;
 }
 
 int CEntityParent::lDelLocalTimer(lua_State* L)

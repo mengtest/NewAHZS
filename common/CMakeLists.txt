@@ -24,6 +24,16 @@ set(HEADER_FILES
 	${HEADER_FILES_PREFIX}/net_util.h
 	${HEADER_FILES_PREFIX}/path_founder.h
 	${HEADER_FILES_PREFIX}/pluto.h
+	${HEADER_FILES_PREFIX}/rpc_mogo.h
+	${HEADER_FILES_PREFIX}/stopword.h
+	${HEADER_FILES_PREFIX}/timer.h
+	${HEADER_FILES_PREFIX}/timer_action.h
+	${HEADER_FILES_PREFIX}/type_mogo.h
+	${HEADER_FILES_PREFIX}/world.h
+	${HEADER_FILES_PREFIX}/world_select.h
+	${HEADER_FILES_PREFIX}/epoll_server.h
+	${HEADER_FILES_PREFIX}/entity.h
+	${HEADER_FILES_PREFIX}/entity_mgr.h
 
 )
 
@@ -47,6 +57,15 @@ set(SOURCE_FILES
 	${SOURCE_FILES_PREFIX}/net_util.cpp
 	${SOURCE_FILES_PREFIX}/path_founder.cpp
 	${SOURCE_FILES_PREFIX}/pluto.cpp
+	${SOURCE_FILES_PREFIX}/rpc_mogo.cpp
+	${SOURCE_FILES_PREFIX}/stopword.cpp
+	${SOURCE_FILES_PREFIX}/timer.cpp
+	${SOURCE_FILES_PREFIX}/timer_action.cpp
+	${SOURCE_FILES_PREFIX}/type_mogo.cpp
+	${SOURCE_FILES_PREFIX}/world.cpp
+	${SOURCE_FILES_PREFIX}/epoll_server.cpp
+	${SOURCE_FILES_PREFIX}/entity.cpp
+	${SOURCE_FILES_PREFIX}/entity_mgr.cpp
 
 )
 
