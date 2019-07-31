@@ -34,6 +34,7 @@ set(HEADER_FILES
 	${HEADER_FILES_PREFIX}/epoll_server.h
 	${HEADER_FILES_PREFIX}/entity.h
 	${HEADER_FILES_PREFIX}/entity_mgr.h
+	${HEADER_FILES_PREFIX}/exception.h
 
 )
 
@@ -66,6 +67,7 @@ set(SOURCE_FILES
 	${SOURCE_FILES_PREFIX}/epoll_server.cpp
 	${SOURCE_FILES_PREFIX}/entity.cpp
 	${SOURCE_FILES_PREFIX}/entity_mgr.cpp
+	${SOURCE_FILES_PREFIX}/exception.cpp
 
 )
 
