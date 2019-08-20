@@ -13,7 +13,6 @@
 //#include "logger.h"
 //#include "memory_pool.h"
 
-
 world* g_pTheWorld = new CWorldBase;
 
 int main(int argc, char* argv[])

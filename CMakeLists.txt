@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.9)
-project(MGServer)
+project(NewAHZS)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 # Add the source in project root directory
 aux_source_directory(. DIRSRCS)

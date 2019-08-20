@@ -3,9 +3,6 @@ project(common)
  
 include_directories(./ ./header ../lua ../include ../cell ../base)
 
-if(MSVC)
-	link_directories("../include/mysql/")
-endif()
 
 set(HEADER_FILES_PREFIX header)
 set(HEADER_FILES
@@ -84,11 +81,3 @@ add_library(common
     ${HEADER_FILES}
     ${SOURCE_FILES}
 )
-
-if(MSVC)
-	target_link_libraries(common tinyxml wepoll hiredis libmysql)
-	ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
-else()
-
-endif()
-target_link_libraries(common tinyxml hiredis lua)
