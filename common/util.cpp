@@ -16,7 +16,7 @@
 #include <sys/stat.h>
 #endif
 
-#include "../header/util.h"
+#include "util.h"
 using namespace std;
 
 

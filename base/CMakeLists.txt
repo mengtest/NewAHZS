@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(baseapp)
  
-aux_source_directory(. DIR_BASEAPP_SRCS)
-include_directories(./ ../common/header ../include ../wepoll/include ../cell ../lua)
+include_directories(./ ../common ../include ../wepoll/include ../cell ../lua)
 link_directories(../libs/mysql)
 
 # Target

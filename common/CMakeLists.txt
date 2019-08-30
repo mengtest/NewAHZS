@@ -1,83 +1,67 @@
 cmake_minimum_required(VERSION 2.8)
 project(common)
  
-include_directories(./ ./header ../lua ../include ../cell ../base)
-
-
-set(HEADER_FILES_PREFIX header)
-set(HEADER_FILES
-	${HEADER_FILES_PREFIX}/util.h
-	${HEADER_FILES_PREFIX}/balance.h
-	${HEADER_FILES_PREFIX}/base64.h
-	${HEADER_FILES_PREFIX}/bitcryto.h
-	${HEADER_FILES_PREFIX}/cfg_reader.h
-	${HEADER_FILES_PREFIX}/cjson.h
-	${HEADER_FILES_PREFIX}/debug.h
-	${HEADER_FILES_PREFIX}/defparser.h
-	${HEADER_FILES_PREFIX}/md5.h
-	${HEADER_FILES_PREFIX}/json_helper.h
-	${HEADER_FILES_PREFIX}/logger.h
-	${HEADER_FILES_PREFIX}/lua_bitset.h
-	${HEADER_FILES_PREFIX}/lua_mogo.h
-	${HEADER_FILES_PREFIX}/lua_mogo_impl.h
-	${HEADER_FILES_PREFIX}/mailbox.h
-	${HEADER_FILES_PREFIX}/memory_pool.h
-	${HEADER_FILES_PREFIX}/net_util.h
-	${HEADER_FILES_PREFIX}/path_founder.h
-	${HEADER_FILES_PREFIX}/pluto.h
-	${HEADER_FILES_PREFIX}/rpc_mogo.h
-	${HEADER_FILES_PREFIX}/stopword.h
-	${HEADER_FILES_PREFIX}/timer.h
-	${HEADER_FILES_PREFIX}/timer_action.h
-	${HEADER_FILES_PREFIX}/type_mogo.h
-	${HEADER_FILES_PREFIX}/world.h
-	${HEADER_FILES_PREFIX}/world_select.h
-	${HEADER_FILES_PREFIX}/epoll_server.h
-	${HEADER_FILES_PREFIX}/entity.h
-	${HEADER_FILES_PREFIX}/entity_mgr.h
-	${HEADER_FILES_PREFIX}/exception.h
-	${HEADER_FILES_PREFIX}/delegate.h
-
-)
-
-set(SOURCE_FILES_PREFIX source)
-set(SOURCE_FILES 
-    ${SOURCE_FILES_PREFIX}/util.cpp
-    ${SOURCE_FILES_PREFIX}/balance.cpp
-	${SOURCE_FILES_PREFIX}/base64.cpp
-	${SOURCE_FILES_PREFIX}/bitcryto.cpp
-	${SOURCE_FILES_PREFIX}/cfg_reader.cpp
-	${SOURCE_FILES_PREFIX}/cjson.cpp
-	${SOURCE_FILES_PREFIX}/debug.cpp
-	${SOURCE_FILES_PREFIX}/defparser.cpp
-	${SOURCE_FILES_PREFIX}/md5.cpp
-	${SOURCE_FILES_PREFIX}/json_helper.cpp
-	${SOURCE_FILES_PREFIX}/logger.cpp
-	${SOURCE_FILES_PREFIX}/lua_bitset.cpp
-	${SOURCE_FILES_PREFIX}/lua_mogo.cpp
-	${SOURCE_FILES_PREFIX}/mailbox.cpp
-	${SOURCE_FILES_PREFIX}/memory_pool.cpp
-	${SOURCE_FILES_PREFIX}/net_util.cpp
-	${SOURCE_FILES_PREFIX}/path_founder.cpp
-	${SOURCE_FILES_PREFIX}/pluto.cpp
-	${SOURCE_FILES_PREFIX}/rpc_mogo.cpp
-	${SOURCE_FILES_PREFIX}/stopword.cpp
-	${SOURCE_FILES_PREFIX}/timer.cpp
-	${SOURCE_FILES_PREFIX}/timer_action.cpp
-	${SOURCE_FILES_PREFIX}/type_mogo.cpp
-	${SOURCE_FILES_PREFIX}/world.cpp
-	${SOURCE_FILES_PREFIX}/epoll_server.cpp
-	${SOURCE_FILES_PREFIX}/entity.cpp
-	${SOURCE_FILES_PREFIX}/entity_mgr.cpp
-	${SOURCE_FILES_PREFIX}/exception.cpp
-
-)
-
-source_group(header FILES ${HEADER_FILES})
-source_group(source FILES ${SOURCE_FILES})
+include_directories(./ ../lua ../include ../cell ../base)
 
 # Target
 add_library(common
-    ${HEADER_FILES}
-    ${SOURCE_FILES}
+	util.cpp
+	util.h
+	balance.cpp
+	balance.h
+	base64.cpp
+	base64.h
+	bitcryto.cpp
+	bitcryto.h
+	cfg_reader.cpp
+	cfg_reader.h
+	cjson.cpp
+	cjson.h
+	debug.cpp
+	debug.h
+	defparser.cpp
+	defparser.h
+	md5.cpp
+	md5.h
+	json_helper.cpp
+	json_helper.h
+	logger.cpp
+	logger.h
+	lua_bitset.cpp
+	lua_bitset.h
+	lua_mogo.cpp
+	lua_mogo.h
+	lua_mogo_impl.h
+	mailbox.cpp
+	mailbox.h
+	memory_pool.cpp
+	memory_pool.h
+	net_util.cpp
+	net_util.h
+	path_founder.cpp
+	path_founder.h
+	pluto.cpp
+	pluto.h
+	rpc_mogo.cpp
+	rpc_mogo.h
+	stopword.cpp
+	stopword.h
+	timer.cpp
+	timer.h
+	timer_action.cpp
+	timer_action.h
+	type_mogo.cpp
+	type_mogo.h
+	world.cpp
+	world.h
+	world_select.h
+	epoll_server.cpp
+	epoll_server.h
+	entity.cpp
+	entity.h
+	entity_mgr.cpp
+	entity_mgr.h
+	exception.cpp
+	exception.h
+	delegate.h
 )
