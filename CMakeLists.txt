@@ -6,7 +6,7 @@ aux_source_directory(. DIRSRCS)
 # Add header file include directories
 include_directories(./ ./include ./include/mysql/ ./tinyxml ./common/header ./lua ./wepoll/include ./wepoll/src ./wepoll/src/regular ./wepoll/src/combined )
 if(MSVC)
-	include_directories(hiredis/win)
+	include_directories(hiredis/win include/win)
 else()
 	include_directories(hiredis/linux)
 endif()

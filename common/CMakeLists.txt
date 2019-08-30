@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 project(common)
  
-include_directories(./ ../lua ../include ../cell ../base)
+
+if(MSVC)
+	include_directories(./ ../lua ../include ../cell ../base ../include/win)
+else()
+	include_directories(./ ../lua ../include ../cell ../base)
+endif()
 
 # Target
 add_library(common
@@ -65,3 +70,7 @@ add_library(common
 	exception.h
 	delegate.h
 )
+
+if(CMAKE_COMPILER_IS_GNUCXX)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
