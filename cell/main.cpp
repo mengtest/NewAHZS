@@ -20,9 +20,11 @@ int main(int argc, char* argv[])
     uint16_t nServerId = (uint16_t)atoi(argv[2]);
     const char* pszLogPath = argv[3];
 
-    signal(SIGPIPE, SIG_IGN);
+#ifndef _WIN32
+	signal(SIGPIPE, SIG_IGN);
 	CDebug::Init();
-	
+#endif	
+
     g_logger.SetLogPath(pszLogPath);
 	//MG_CONFIRM(false, "这是个测试");
 	
