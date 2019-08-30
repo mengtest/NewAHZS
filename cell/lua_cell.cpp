@@ -292,14 +292,6 @@ int LuaOpenMogoLibCCell(lua_State *L)
 
     };
 
-#ifndef __LUA_5_2_1
-    luaL_register(L, s_szMogoLibName, mogoLib);
-    //luaL_register之后mogo位于栈顶
-
-    lua_pushstring(L, "cellData");
-    lua_newtable(L);
-    lua_rawset(L, -3);
-#else
 
     //以下三行代码替换上面注释的代码语句。lua版本5.2中采用以下格式注册c函数，
     //5.1版本中采用上面的方法注册c函数
@@ -309,8 +301,6 @@ int LuaOpenMogoLibCCell(lua_State *L)
     lua_newtable(L);
     lua_rawset(L, -3);
     lua_setglobal(L, s_szMogoLibName);
-
-#endif // !__LUA_5.2.1
 
 
     ClearLuaStack(L);

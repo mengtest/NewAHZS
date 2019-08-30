@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(baseapp)
  
+aux_source_directory(. DIR_BASEAPP_SRCS)
 include_directories(./ ../common/header ../include ../wepoll/include ../cell ../lua)
 link_directories(../libs/mysql)
 
@@ -14,6 +15,16 @@ add_executable (baseapp
 	lua_base.h
 	world_base.cpp
 	world_base.h
+	../cell/entity_cell.cpp
+	../cell/entity_cell.h
+	../cell/aoi.cpp
+	../cell/aoi.h
+	../cell/lua_cell.cpp
+	../cell/lua_cell.h
+	../cell/space.cpp
+	../cell/space.h
+	../cell/world_cell.cpp
+	../cell/world_cell.h
 	main.cpp
 )
 

@@ -15,6 +15,7 @@ add_subdirectory(tinyxml)
 add_subdirectory(common)
 add_subdirectory(lua)
 add_subdirectory(base)
+add_subdirectory(cell)
 
 
 if(MSVC)

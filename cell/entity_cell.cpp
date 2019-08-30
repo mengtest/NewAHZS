@@ -1515,7 +1515,7 @@ int CEntityCell::lProcessMove(lua_State* L)
 	int16_t x3 = 0;
 	int16_t y3 = 0;
 	float speed = 0.0f;
-	uint totalTimeusec = 0;
+	unsigned int totalTimeusec = 0;
 	while (speed <= 0.0f)
 	{
 		speed = (float)m_nSpeed;
@@ -1526,10 +1526,17 @@ int CEntityCell::lProcessMove(lua_State* L)
 	}
 	//            printf("speed %f  %d %d   %d %d \n", speed, x1, y1, tarX, tarY);
 
+#ifdef _WIN32
+	win_time_val_t tv;
+	win_gettimeofday(&tv);
+	unsigned int curTime = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	unsigned int dstTime = curTime + totalTimeusec;
+#else
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	uint curTime = tv.tv_sec * 1000 + tv.tv_usec / 1000;
 	uint dstTime = curTime + totalTimeusec;
+#endif // _WIN32
 	//        printf("targetTime:%d %u %u  %u\n",totalTimeusec, (tv.tv_sec * 1000 + tv.tv_usec / 1000) ,curTime, dstTime);
 
 
