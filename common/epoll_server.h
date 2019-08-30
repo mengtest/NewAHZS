@@ -3,7 +3,7 @@
 
 
 #ifndef _WIN32
-
+#include <sys/epoll.h>
 #else
 #pragma comment(lib,"ws2_32.lib")
 #include "wepoll.h"
@@ -11,8 +11,8 @@
 #include <ws2tcpip.h>
 #endif
 
+#include <thread>
 #include <time.h>
-
 #include "util.h"
 #include "net_util.h"
 #include "mailbox.h"

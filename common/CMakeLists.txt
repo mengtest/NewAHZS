@@ -73,4 +73,5 @@ add_library(common
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+	ADD_DEFINITIONS(-D__RELOGIN)
 endif()

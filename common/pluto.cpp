@@ -1086,7 +1086,7 @@ CPluto& CPluto::FillPlutoFromLua(VTYPE vt, lua_State* L, int idx)
         {
             //todo, 检查整数系列的类型是否正确,不能直接就转换类型
             int n = luaL_checkint(L, idx);
-			assert(n >= 0 && n <= UINT8_MAX, "uint8 overfloat");
+			MG_ASSERT(n >= 0 && n <= UINT8_MAX, "uint8 overfloat");
             u << (uint8_t)n;
             //printf("arg: idx = %d ; value = %d \n", idx, n);
             break;
