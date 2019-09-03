@@ -3,9 +3,9 @@ project(common)
  
 
 if(MSVC)
-	include_directories(./ ../lua ../include ../cell ../base ../include/win)
+	include_directories(./ ../lua ../include ../cellapp ../baseapp ../include/win)
 else()
-	include_directories(./ ../lua ../include ../cell ../base)
+	include_directories(./ ../lua ../include ../cellapp ../baseapp )
 endif()
 
 # Target

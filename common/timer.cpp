@@ -9,10 +9,10 @@
 //----------------------------------------------------------------*/
 
 #include "timer.h"
-#include "../base/entity_base.h"
+#include "entity_base.h"
 //#include "entity.h"
-#include "../base/lua_base.h"
-#include "../base/world_base.h"
+#include "lua_base.h"
+#include "world_base.h"
 #include "world_select.h"
 
 

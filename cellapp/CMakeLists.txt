@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(cellapp)
  
-include_directories(./ ../common ../include ../wepoll/include ../base ../lua)
+include_directories(./ ../common ../include ../wepoll/include ../baseapp ../lua)
 link_directories(../libs/mysql ../libs/linux)
 
 # Target
@@ -18,12 +18,12 @@ add_executable (cellapp
 	space.h
 	world_cell.cpp
 	world_cell.h
-	../base/entity_base.cpp
-	../base/entity_base.h
-	../base/lua_base.cpp
-	../base/lua_base.h
-	../base/world_base.cpp
-	../base/world_base.h
+	../baseapp/entity_base.cpp
+	../baseapp/entity_base.h
+	../baseapp/lua_base.cpp
+	../baseapp/lua_base.h
+	../baseapp/world_base.cpp
+	../baseapp/world_base.h
 	main.cpp
 )
 
