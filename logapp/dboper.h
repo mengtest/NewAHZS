@@ -1,6 +1,10 @@
 #ifndef __DB_OPER_HEAD__
 #define __DB_OPER_HEAD__
 
+#ifdef _WIN32
+#include<winsock2.h>
+#endif
+
 #include <mysql.h>
 
 #include "pluto.h"

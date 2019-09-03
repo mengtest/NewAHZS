@@ -3,7 +3,7 @@
 
 #include <string>
 #include <map>
-#include<vector>
+#include <vector>
 using namespace std;
 
 //#define MYSQL_THREAD_NUM 4

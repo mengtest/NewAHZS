@@ -1,13 +1,11 @@
 #ifndef __DB_TASK_HEAD__
 #define __DB_TASK_HEAD__
 
-#include <list>
-#include<string>
-#include "mutex.h"
-
-#include <pthread.h>
-
 #include "dboper.h"
+#include <list>
+#include <string>
+#include <thread>
+#include <mutex>
 using namespace std;
 
 

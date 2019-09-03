@@ -7,10 +7,13 @@
 
 #ifndef __THREADPOOL_HEAD__
 #define	__THREADPOOL_HEAD__
-#include<pthread.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include <iostream>
 #include <assert.h>
+#include <thread>
+#include <mutex>
+#include <condition_variable> 
+
 using namespace std;
 
 typedef void* (*threadjob)(void *arg); //线程回调函数
@@ -26,10 +29,10 @@ struct threadpool {
     int queue_max_num; //队列中最大job的个数
     struct job *head; //指向job的头指针
     struct job *tail; //指向job的尾指针
-    pthread_t *pthreads; //线程池中所有线程的pthread_t
-    pthread_mutex_t mutex; //互斥信号量
-    pthread_cond_t queue_empty; //队列为空的条件变量
-    pthread_cond_t queue_not_empty; //队列不为空的条件变量
+	std::thread* pthreads; //线程池中所有线程的pthread_t
+    std::mutex mutex; //互斥信号量
+    std::condition_variable_any queue_empty; //队列为空的条件变量
+    std::condition_variable_any queue_not_empty; //队列不为空的条件变量
     int queue_cur_num; //队列当前的job个数
     int queue_close; //队列是否已经关闭
     int pool_close; //线程池是否已经关闭

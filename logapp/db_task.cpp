@@ -32,7 +32,7 @@ void CDbTask::Run()
         if(u == NULL)
         {
             //sleep(1);
-            usleep(50000);
+            //usleep(50000);
         }
         else
         {
@@ -45,7 +45,7 @@ void CDbTask::Run()
             //如果设置了退出标记并且已经没有数据需要处理,则退出
             if(g_pluto_recvlist.Empty())
             {
-                LogInfo("db_task.quit", "pid=%d", (int)pthread_self());
+                // LogInfo("db_task.quit", "pid=%d", (int)pthread_self());
                 break;
             }
         }
