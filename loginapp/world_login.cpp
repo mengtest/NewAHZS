@@ -10,7 +10,6 @@
 
 #include "world_login.h"
 #include <string.h>
-#include <curl/curl.h> 
 
 enum
 {
