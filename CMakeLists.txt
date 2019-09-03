@@ -16,6 +16,7 @@ add_subdirectory(common)
 add_subdirectory(lua)
 add_subdirectory(baseapp)
 add_subdirectory(cellapp)
+add_subdirectory(loginapp)
 
 
 
