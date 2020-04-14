@@ -58,18 +58,6 @@ inline string& Trim(string& s)
 	return Rtrim(Ltrim(s));
 }
 
-//删除字符串左边的空格
-extern char* Ltrim(char* p);
-
-//删除字符串右边的空格
-extern char* Rtrim(char* p);
-
-//删除字符串两边的空格
-inline char* Trim(char* s)
-{
-	return Rtrim(Ltrim(s));
-}
-
 //比较一个字符串的大写是否匹配一个大写的字符串
 extern bool UpperStrCmp(const char* src, const char* desc);
 

@@ -20,28 +20,30 @@
 using namespace std;
 
 
-
-string& Ltrim(string& s)
+int my_isspace(int ch)
 {
-	int (*func)(int) = isspace;
+	return (unsigned int)(ch - 9) < 5u || ch == ' ';
+}
 
-	string::iterator iter;
-	iter = find_if(s.begin(), s.end(), not1(ptr_fun(func)));
-	s.erase(s.begin(), iter);
+string& Ltrim(string& ss)
+{
+	std::string::iterator it = ss.begin();
+	std::string::iterator end = ss.end();
 
-	return s;
+	while (it != end && my_isspace(*it)) ++it;
+	ss.erase(ss.begin(), it);
+	return ss;
 }
 
 
-string& Rtrim(string& s)
+string& Rtrim(string& ss)
 {
-	int (*func)(int) = isspace;
+	int pos = int(ss.size()) - 1;
 
-	string::reverse_iterator iter;
-	iter = find_if(s.rbegin(), s.rend(), not1(ptr_fun(func)));
-	s.erase(iter.base(), s.end());
+	while (pos >= 0 && my_isspace(ss[pos])) --pos;
+	ss.resize(pos + 1);
 
-	return s;
+	return ss;
 }
 
 
@@ -113,54 +115,7 @@ string FormatPathName(const string& strPath)
 	return strPath1;
 }
 
-//删除字符串右边的空格
-char* Rtrim(char* p)
-{
-	if (p == NULL)
-	{
-		return p;
-	}
 
-	size_t n = strlen(p);
-	if (n == 0)
-	{
-		return p;
-	}
-
-	char* q = p + n - 1;
-
-	while (isspace(*q))
-	{
-		--q;
-	}
-
-	*(q + 1) = '\0';
-
-	return p;
-}
-
-//删除字符串左边的空格
-char* Ltrim(char* p)
-{
-	if (p == NULL)
-	{
-		return p;
-	}
-
-	char* q = p;
-
-	while (isspace(*q))
-	{
-		++q;
-	}
-
-	if (p != q)
-	{
-		while (*p++ = *q++) {}
-	}
-
-	return p;
-}
 
 //比较一个字符创的大写是否匹配一个大写的字符串
 //也可以用strcasecmp
@@ -205,7 +160,7 @@ list<string> SplitString(const string& s1, int nDelim)
 	istringstream iss(s1);
 	while (iss.getline(pszTemp, (std::streamsize)nSize, nDelim))
 	{
-		if (strlen(Rtrim(pszTemp)) > 0)
+		if (Rtrim(std::string(pszTemp)).length() > 0)
 		{
 			l.push_back(pszTemp);
 		}
@@ -230,7 +185,7 @@ void SplitString(const string& s1, int nDelim, list<string>& ls)
 	istringstream iss(s1);
 	while (iss.getline(pszTemp, (std::streamsize)nSize, nDelim))
 	{
-		if (strlen(Rtrim(pszTemp)) > 0)
+		if (Rtrim(std::string(pszTemp)).length() > 0)
 		{
 			ls.push_back(pszTemp);
 		}
@@ -254,7 +209,7 @@ void SplitStringToVector(const string& s1, int nDelim, vector<string>& ls)
 	istringstream iss(s1);
 	while (iss.getline(pszTemp, (std::streamsize)nSize, nDelim))
 	{
-		if (strlen(Rtrim(pszTemp)) > 0)
+		if (Rtrim(std::string(pszTemp)).length() > 0)
 		{
 			ls.push_back(pszTemp);
 		}
@@ -278,7 +233,7 @@ void SplitStringToMap(const string& s1, int nDelim, char nDelim2, map<string, st
 	istringstream iss(s1);
 	while (iss.getline(pszTemp, (std::streamsize)nSize, nDelim))
 	{
-		if (strlen(Rtrim(pszTemp)) > 0)
+		if (Rtrim(std::string(pszTemp)).length() > 0)
 		{
 			string s2(pszTemp);
 			string::size_type nn = s2.find(nDelim2);

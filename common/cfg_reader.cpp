@@ -76,7 +76,7 @@ void CCfgReader::ScanCfgFile()
 	while (!file.eof() && file.getline(szLine, sizeof(szLine), 0x0A))
 	{
 		//window文件格式换行是0x0D0A,UNIX/LINUX是0x0A
-		string sLine = Trim(szLine);
+		string sLine = Trim(std::string(szLine));
 		if (sLine.empty() || sLine[0] == '#')
 		{
 			continue;

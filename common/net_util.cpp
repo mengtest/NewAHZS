@@ -23,6 +23,10 @@ bool MogoSetNonblocking(int sockfd)
 
 int MogoSocket()
 {
+#ifdef _WIN32
+	WSADATA wsadata;
+	WSAStartup(MAKEWORD(2, 2), &wsadata);
+#endif
 	return socket(PF_INET, SOCK_STREAM, 0);
 }
 
