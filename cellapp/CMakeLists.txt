@@ -4,27 +4,25 @@ project(cellapp)
 include_directories(./ ../common ../include ../wepoll/include ../baseapp ../lua)
 link_directories(../libs/mysql ../libs/linux)
 
-# Target
-add_executable (cellapp
-	aoi.cpp
-	aoi.h
-	cellapp.cpp
-	cellapp.h
-	entity_cell.cpp
-	entity_cell.h
-	lua_cell.cpp
-	lua_cell.h
-	space.cpp
-	space.h
-	world_cell.cpp
-	world_cell.h
+
+FILE(GLOB BASEAPP_FILES 
 	../baseapp/entity_base.cpp
 	../baseapp/entity_base.h
 	../baseapp/lua_base.cpp
 	../baseapp/lua_base.h
 	../baseapp/world_base.cpp
-	../baseapp/world_base.h
-	main.cpp
+	../baseapp/world_base.h	
+)
+source_group(baseapp FILES ${BASEAPP_FILES} )
+
+
+FILE(GLOB SOURCE_FILES "./*.cpp" "./*.h")
+source_group(src FILES ${SOURCE_FILES} )
+
+# Target
+add_executable (cellapp
+	${BASEAPP_FILES}
+	${SOURCE_FILES}
 )
 
 if(MSVC)

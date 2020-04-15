@@ -100,7 +100,9 @@ int main(int argc, char* argv[])
     }
 
     //启动cwmd
+#ifndef _WIN32
     signal(SIGPIPE, SIG_IGN);
+#endif
     CDebug::Init();
 
     CMgrServer s;

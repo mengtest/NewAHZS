@@ -24,10 +24,10 @@ bool MogoSetNonblocking(int sockfd)
 int MogoSocket()
 {
 #ifdef _WIN32
-	WSADATA wsadata;
-	WSAStartup(MAKEWORD(2, 2), &wsadata);
-#endif
+	return socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+#else
 	return socket(PF_INET, SOCK_STREAM, 0);
+#endif
 }
 
 int MogoBind(int sockfd, const char* pszAddr, unsigned int unPort)
@@ -69,6 +69,7 @@ int MogoConnect(int fd, const char* pszAddr, unsigned int unPort)
 	addr.sin_family = PF_INET;
 	addr.sin_port = htons(unPort);
 	addr.sin_addr.s_addr = inet_addr(pszAddr);
+
 
 	return connect(fd, (sockaddr*)&addr, sizeof(addr));
 }

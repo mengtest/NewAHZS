@@ -15,9 +15,11 @@
 
 
 CEpollServer::CEpollServer() : m_epfd(0), m_fds(), the_world(NULL), m_unMailboxId(0), m_bShutdown(false), m_unMaxPlutoCount(0)
-
 {
-
+#ifdef _WIN32
+	WSADATA wsadata;
+	WSAStartup(MAKEWORD(2, 2), &wsadata);
+#endif
 }
 
 
@@ -25,6 +27,10 @@ CEpollServer::~CEpollServer()
 {
 	ClearMap(m_fds);
 	ClearContainer(m_mb4del);
+
+#ifdef _WIN32
+	WSACleanup();
+#endif
 }
 
 int CEpollServer::StartServer(const char* pszAddr, uint16_t unPort)

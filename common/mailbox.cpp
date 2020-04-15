@@ -135,7 +135,7 @@ int CMailBox::ConnectServer(HANDLE epfd)
     }
 
     m_fd = MogoSocket();
-    MogoSetNonblocking(m_fd);
+    //MogoSetNonblocking(m_fd);
 
 	//修改rcvbuf和sndbuf
 	enum{ _BUFF_SIZE = 174760 };
@@ -154,6 +154,7 @@ int CMailBox::ConnectServer(HANDLE epfd)
     int nRet = MogoConnect(m_fd, GetServerName().c_str(), GetServerPort());
     if(nRet != 0 && errno != EINPROGRESS)
     {
+        int error_ = WSAGetLastError();
         ERROR_RETURN2("Failed to connect");
     }
 

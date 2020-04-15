@@ -23,16 +23,8 @@ bool CDebug::s_bAutoDump	= false;
 void CDebug::Init(bool bAutoDump)
 {
 	setlocale(LC_ALL,"chs");
-	if (signal(SIGUSR1, CDebug::SignalHandle) == SIG_ERR)
-	{
-		std::cerr << "Can't init signal[10]!" << std::endl;
-		abort();
-	}
-	if (signal(SIGUSR2, CDebug::SignalHandle) == SIG_ERR)
-	{
-		std::cerr << "Can't init signal[12]!" << std::endl;
-		abort();
-	}
+	signal(SIGUSR1, CDebug::SignalHandle);
+	signal(SIGUSR2, CDebug::SignalHandle);
 	s_bAutoDump = bAutoDump;
 }
 
