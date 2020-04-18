@@ -1,9 +1,9 @@
+#include <signal.h>
 #include "dbmgr.h"
 #include "world_dbmgr.h"
 #include "db_task.h"
 #include "world_select.h"
 #include "debug.h"
-#include <signal.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -43,8 +43,9 @@ int main(int argc, char* argv[])
     const char* pszEtcFn = argv[1];
     uint16_t nServerId = (uint16_t)atoi(argv[2]);
     const char* pszLogPath = argv[3];
-
-    signal(SIGPIPE, SIG_IGN);
+#ifndef _WIN32
+	signal(SIGPIPE, SIG_IGN);
+#endif
     CDebug::Init();
 
     //printf("%d\n", mysql_thread_safe() );
@@ -53,10 +54,9 @@ int main(int argc, char* argv[])
         mysql_close(dummy);
     }
 
-    g_logger_mutex = new pthread_mutex_t;
+    g_logger_mutex = new std::mutex;
 
-    if(!g_pluto_recvlist.InitMutex() || !g_pluto_sendlist.InitMutex() || !g_worldDbmgr.InitMutex()
-        || pthread_mutex_init(g_logger_mutex, NULL) != 0 )
+    if(!g_pluto_recvlist.InitMutex() || !g_pluto_sendlist.InitMutex() || !g_worldDbmgr.InitMutex() )
     {
         printf("pthead_mutext_t init error:%d,%s\n", errno, strerror(errno));
         return -1;
@@ -76,18 +76,12 @@ int main(int argc, char* argv[])
     s.SetWorld(&world);
     world.SetServer(&s);
 
-    vector<pthread_t> pid_list;
+    vector<std::thread> pid_list;
     {
-        pthread_t pid;
         for(int i=0; i<4; ++i)
         {
             int* ii = new int(i);
-            if(pthread_create(&pid, NULL, RunDbTask, ii) != 0)
-            {
-                printf("pthread_create error:%d,%s\n", errno, strerror(errno));
-                return -2;
-            }
-            pid_list.push_back(pid);
+            pid_list.push_back(std::thread(RunDbTask, ii));
             //delete ii;
         }
     }
@@ -97,11 +91,7 @@ int main(int argc, char* argv[])
 
     for(size_t i = 0; i < pid_list.size(); ++i)
     {
-        if(pthread_join(pid_list[i], NULL) != 0)
-        {
-            printf("pthread_join error:%d,%s\n", errno, strerror(errno));
-            return -3;
-        }
+        pid_list[i].join();
     }
 
 }

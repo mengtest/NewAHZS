@@ -62,6 +62,8 @@ add_library(common
 	world_select.h
 	epoll_server.cpp
 	epoll_server.h
+	mutex.cpp
+	mutex.h
 	entity.cpp
 	entity.h
 	entity_mgr.cpp

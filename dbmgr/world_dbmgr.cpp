@@ -1,6 +1,7 @@
 #include "world_dbmgr.h"
 #include "pluto.h"
 #include "db_task.h"
+#include "mutex.h"
 
 
 
@@ -601,7 +602,7 @@ int CWorldDbmgr::QueryModifyNoResp(T_VECTOR_OBJECT* p, CDbOper& db)
 
 bool CWorldDbmgr::InitMutex()
 {
-	return pthread_mutex_init(&m_entityMutex, NULL) == 0 && pthread_mutex_init(&m_rpcMutex, NULL) == 0;
+	return true;
 }
 
 //获取下一个entity id,本方法需要是一个同步方法

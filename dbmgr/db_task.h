@@ -2,7 +2,7 @@
 #define __DB_TASK_HEAD__
 
 #include <list>
-#include <pthread.h>
+#include <thread>
 #include "dboper.h"
 
 class CWorldDbmgr;

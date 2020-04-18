@@ -13,8 +13,7 @@
 #include <arpa/inet.h>
 #else
 #define WIN32_LEAN_AND_MEAN //¹Ø¼ü
-#pragma comment(lib,"ws2_32.lib")
-#include "winsock2.h"
+#include <WinSock2.h>
 #include <ws2tcpip.h>
 #include "wepoll.h"
 #endif // !_WIN32

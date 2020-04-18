@@ -1,5 +1,4 @@
-#ifndef __DBMGR_HEAD__
-#define __DBMGR_HEAD__
+#pragma once
 
 #include "epoll_server.h"
 
@@ -24,5 +23,4 @@ class CDbMgrServer : public CEpollServer
 };
 
 
-#endif		//__DBMGR_HEAD__
 

@@ -40,6 +40,8 @@ int CDbMgrServer::HandleSendPluto()
     }
 
     CEpollServer::HandleSendPluto();
+
+    return 0;
 }
 CPlutoList g_pluto_recvlist;
 CPlutoList g_pluto_sendlist;

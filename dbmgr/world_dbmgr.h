@@ -105,8 +105,8 @@ public:
 	SEntityLookup* LookupAvatarByAccount(const string& strAccount);
 
 private:
-	pthread_mutex_t m_entityMutex;                                          //用于entity管理的mutex
-	pthread_mutex_t m_rpcMutex;
+	std::mutex m_entityMutex;                                          //用于entity管理的mutex
+	std::mutex m_rpcMutex;
 	map<string, map<TDBID, SEntityLookup*>*> m_entities4LookupByDbid;       //根据dbid查找对应的entity
 	map<string, map<string, SEntityLookup*>*> m_entities4LookupByName;      //根据唯一索引值查找对应的entity
 	map<string, SEntityLookup*> m_avatars4LookupByAccount;                  //根据账号名查找对应的Avatar

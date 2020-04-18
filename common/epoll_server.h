@@ -4,8 +4,6 @@
 
 #ifndef _WIN32
 #include <sys/epoll.h>
-#else
-#define WIN32_LEAN_AND_MEAN
 #endif
 
 #include <thread>
