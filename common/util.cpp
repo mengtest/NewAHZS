@@ -17,6 +17,7 @@
 #endif
 
 #include "util.h"
+#include <string>
 using namespace std;
 
 
@@ -25,7 +26,7 @@ int my_isspace(int ch)
 	return (unsigned int)(ch - 9) < 5u || ch == ' ';
 }
 
-string& Ltrim(string& ss)
+std::string Ltrim(string& ss)
 {
 	std::string::iterator it = ss.begin();
 	std::string::iterator end = ss.end();
@@ -36,7 +37,7 @@ string& Ltrim(string& ss)
 }
 
 
-string& Rtrim(string& ss)
+std::string Rtrim(string& ss)
 {
 	int pos = int(ss.size()) - 1;
 
@@ -160,7 +161,8 @@ list<string> SplitString(const string& s1, int nDelim)
 	istringstream iss(s1);
 	while (iss.getline(pszTemp, (std::streamsize)nSize, nDelim))
 	{
-		if (Rtrim(std::string(pszTemp)).length() > 0)
+		std::string strTemp = std::string(pszTemp);
+		if (Rtrim(strTemp).length() > 0)
 		{
 			l.push_back(pszTemp);
 		}
@@ -185,7 +187,8 @@ void SplitString(const string& s1, int nDelim, list<string>& ls)
 	istringstream iss(s1);
 	while (iss.getline(pszTemp, (std::streamsize)nSize, nDelim))
 	{
-		if (Rtrim(std::string(pszTemp)).length() > 0)
+		std::string strTemp = std::string(pszTemp);
+		if (Rtrim(strTemp).length() > 0)
 		{
 			ls.push_back(pszTemp);
 		}
@@ -209,7 +212,8 @@ void SplitStringToVector(const string& s1, int nDelim, vector<string>& ls)
 	istringstream iss(s1);
 	while (iss.getline(pszTemp, (std::streamsize)nSize, nDelim))
 	{
-		if (Rtrim(std::string(pszTemp)).length() > 0)
+		std::string strTemp = std::string(pszTemp);
+		if (Rtrim(strTemp).length() > 0)
 		{
 			ls.push_back(pszTemp);
 		}
@@ -233,7 +237,8 @@ void SplitStringToMap(const string& s1, int nDelim, char nDelim2, map<string, st
 	istringstream iss(s1);
 	while (iss.getline(pszTemp, (std::streamsize)nSize, nDelim))
 	{
-		if (Rtrim(std::string(pszTemp)).length() > 0)
+		std::string strTemp = std::string(pszTemp);
+		if (Rtrim(strTemp).length() > 0)
 		{
 			string s2(pszTemp);
 			string::size_type nn = s2.find(nDelim2);

@@ -154,7 +154,6 @@ int CMailBox::ConnectServer(HANDLE epfd)
     int nRet = MogoConnect(m_fd, GetServerName().c_str(), GetServerPort());
     if(nRet != 0 && errno != EINPROGRESS)
     {
-        int error_ = WSAGetLastError();
         ERROR_RETURN2("Failed to connect");
     }
 

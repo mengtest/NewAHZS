@@ -50,12 +50,13 @@ using std::ios;
 using std::list;
 
 
-extern string& Ltrim(string& s);
-extern string& Rtrim(string& s);
+extern string Ltrim(string& s);
+extern string Rtrim(string& s);
 
-inline string& Trim(string& s)
+inline string Trim(string& s)
 {
-	return Rtrim(Ltrim(s));
+	std::string after_l = Ltrim(s); 
+	return Rtrim(after_l);
 }
 
 //比较一个字符串的大写是否匹配一个大写的字符串

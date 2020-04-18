@@ -44,7 +44,7 @@ if(MSVC)
 	target_link_libraries(logapp common libcurl tinyxml hiredis lua wepoll libmysql ws2_32)
 	ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
 else()
-	target_link_libraries(logapp common libcurl tinyxml hiredis lua mysqlclient uuid dl m libssl.a libcrypto.a)
+	target_link_libraries(logapp common curl tinyxml hiredis lua mysqlclient uuid dl m libssl.a libcrypto.a)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
