@@ -22,6 +22,7 @@ bool CDbTask::Init(const SDBCfg& cfg, string& strErr)
 bool CDbTask::UnInit()
 {
 	 m_db.DisConnect();
+     return true;
 }
 
 void CDbTask::Run()

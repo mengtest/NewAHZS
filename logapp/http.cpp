@@ -7,7 +7,6 @@
 #include <curl/curl.h> 
 #include "other_def.h"
 #include <iconv.h>
-#include "threadpool.h"
 
 using namespace std;
 

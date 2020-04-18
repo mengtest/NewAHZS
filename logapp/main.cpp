@@ -5,7 +5,6 @@
 #include "debug.h"
 #include <signal.h>
 #include "other_def.h"
-#include "threadpool.h"
 #include <curl/curl.h> 
 #include "cjson.h"
 #include "type_mogo.h"
@@ -16,7 +15,6 @@ world* g_pTheWorld = new CWorldOther;
 CWorldOther& g_worldOther = (CWorldOther&)(*g_pTheWorld);
 extern int InitLib();
 
-struct threadpool* g_threadpool = NULL;
 extern int GetUrl(const char* url, OUT string& result);
 
 
@@ -46,34 +44,17 @@ void* RunDbTask(void* arg)
     return NULL;
 }
 
-int create_threads(vector<pthread_t> & pid_list)
+int create_threads(vector<std::thread> & pid_list)
 {
-	pthread_t pid;
 	//static int a[MYSQL_THREAD_NUM ] = {0};
 	for(int i=0; i<MYSQL_THREAD_NUM ; ++i)
 	{	//a[i] = i;
-        int *ptrI = new int(i);
-		if(pthread_create(&pid, NULL, RunDbTask, ptrI) != 0)
-		{
-			printf("pthread_create error:%d,%s\n", errno, strerror(errno));
-			return -2;
-		}
-		pid_list.push_back(pid);
+		int* ptrI = new int(i);
+		std::thread thread_(RunDbTask, (void*)ptrI);
+		pid_list.push_back(std::move(thread_));
 	}
 	return 0;
 
-}
-
-int InitThreadPool()
-{
-	curl_version_info_data* info = curl_version_info(CURLVERSION_NOW);
-	//if (info->features & CURL_VERSION_ASYNCHDNS)
-		//std::cout << "ares enabled" << endl;
-	//else
-		//std::cout << "ares NOT enabled" << endl;
-	g_threadpool = (struct threadpool *) threadpool_init(POOL_THREAD_NUM, POOL_QUEUE_NUM);
-	curl_global_init(CURL_GLOBAL_ALL);
-	return 0;
 }
 
 void* ThreadJob_SdkServerVerify(void* arg)
@@ -168,11 +149,7 @@ void* ThreadJob_SdkServerVerify(void* arg)
 	return (void*)0;
 }
 
-int DestroyThreadPool()
-{
-	threadpool_destroy(g_threadpool);
-}
-
+#ifndef _WIN32
 void SigHandler(int signo)
 {
     if(signo == SIGALRM)
@@ -182,7 +159,7 @@ void SigHandler(int signo)
         return;
     }
 }
-
+#endif
 
 
 int main(int argc, char* argv[])
@@ -198,7 +175,9 @@ int main(int argc, char* argv[])
     uint16_t nServerId = SERVER_LOG;
     const char* pszLogPath = argv[3];
 
-    signal(SIGPIPE, SIG_IGN);
+#ifndef _WIN32
+	signal(SIGPIPE, SIG_IGN);
+#endif	
 	//curl_global_init(CURL_GLOBAL_ALL);
     CDebug::Init();
     InitLib();
@@ -209,10 +188,9 @@ int main(int argc, char* argv[])
         mysql_close(dummy);
     }
 
-    g_logger_mutex = new pthread_mutex_t;
+    g_logger_mutex = new std::mutex;
 
-    if(!g_pluto_recvlist.InitMutex() || !g_pluto_sendlist.InitMutex() || !g_worldOther.InitMutex()
-        || pthread_mutex_init(g_logger_mutex, NULL) != 0 )
+    if(!g_pluto_recvlist.InitMutex() || !g_pluto_sendlist.InitMutex() || !g_worldOther.InitMutex())
     {
         printf("pthead_mutext_t init error:%d,%s\n", errno, strerror(errno));
         return -1;
@@ -232,7 +210,7 @@ int main(int argc, char* argv[])
     s.SetWorld(&world);
     world.SetServer(&s);
 
-    vector<pthread_t> pid_list;
+    vector<std::thread> pid_list;
 
 	int ret = create_threads(pid_list);
 	if ( 0 != ret)
@@ -240,23 +218,18 @@ int main(int argc, char* argv[])
 		return ret;
 	}
 	
-    signal(SIGALRM, SigHandler);
+#ifndef _WIN32
+	signal(SIGALRM, SigHandler);
+#endif	
 
     uint16_t unPort = world.GetServerPort(nServerId);
-	////初始化线程池以及相关的多线程的检查
-	//InitThreadPool();
     
 	s.Service("", unPort);
 
-	//处理完了所有的包后再关闭线程池
-	//DestroyThreadPool();
 
 	for(size_t i = 0; i < pid_list.size(); ++i)
     {
-        if(pthread_join(pid_list[i], NULL) != 0)
-        {           
-            return -3;
-        }
+		pid_list[i].join();
     }
 
 }

@@ -90,6 +90,8 @@ cJSON *RenderJsonArray(vector<int>& format, vector<string>&  data)
 			cJSON_AddItemToArray(json, n);
 		++i;
 	}
+
+	return n;
 }
 
 string get_value(map<string,string>& params, const char* key)

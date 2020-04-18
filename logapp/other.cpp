@@ -40,6 +40,8 @@ int COtherServer::HandleSendPluto()
     }
 
     CEpollServer::HandleSendPluto();
+
+    return 0;
 }
 
 void COtherServer::OnShutdownServer()

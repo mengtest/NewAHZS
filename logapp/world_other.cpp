@@ -18,8 +18,6 @@ extern tg_API_LIB g_api_lib;
 
 #include "db_task.h"
 
-#include "threadpool.h"
-extern threadpool* g_threadpool;
 extern void* ThreadJob_SdkServerVerify(void* arg);
 extern int GetUrl(const char* url, OUT string& result);
 extern int GetUrl_new(const char* url, OUT string& result);
@@ -214,7 +212,8 @@ int CWorldOther::FromRpcCall(CPluto& u, CDbOper& db)
 
 bool CWorldOther::InitMutex()
 {
-	return pthread_mutex_init(&m_entityMutex, NULL) == 0 && pthread_mutex_init(&m_rpcMutex, NULL) == 0;
+	// return pthread_mutex_init(&m_entityMutex, NULL) == 0 && pthread_mutex_init(&m_rpcMutex, NULL) == 0;
+	return true;
 }
 
 
@@ -478,43 +477,6 @@ int CWorldOther::RunApi(int nFd, string & method_str, string& params_str, CDbOpe
 
 int CWorldOther::SdkServerVerify(T_VECTOR_OBJECT* p, CPluto& u)
 {
-#if 0
-	//注释掉老代码
-	if (p->size() != 4)
-	{
-		return -1;
-	}
-	string& url = VOBJECT_GET_SSTR((*p)[0]);
-	int32_t nFd = VOBJECT_GET_I32((*p)[1]);
-	string& strAccount = VOBJECT_GET_SSTR((*p)[2]);
-	string& strPlatId = VOBJECT_GET_SSTR((*p)[3]);
-	CMailBox* pmb = u.GetMailbox();
-	if (NULL == pmb)
-	{
-		return -1;
-	}
-
-	CPluto* duplicate = new CPluto(u.GetBuff(), u.GetMaxLen());
-	duplicate->SetMailbox(pmb);
-	int ret = threadpool_add_job(g_threadpool, ThreadJob_SdkServerVerify, (void*)(duplicate));
-
-	if (ret != 0)
-	{
-		//直接返回服务器繁忙，请稍后再试
-		//printf("服务器繁忙，请稍后再试!\n");
-		//std::cout << "服务器繁忙，请稍后再试!" << endl;
-		LogWarning("CWorldOther::SdkServerVerify", "threadpool list is full.");
-		CPluto* u2 = new CPluto;
-		u2->Encode(MSGID_LOGINAPP_LOGIN_VERIFY_CALLBACK);
-		(*u2)<< int32_t(-2) << nFd << strAccount << strPlatId << EndPluto;
-		g_pluto_sendlist.PushPluto(u2);
-		//不适合多线程发送
-		//pmb->RpcCall(GetRpcUtil(), MSGID_LOGINAPP_LOGIN_VERIFY_CALLBACK, -2, nFd, strAccount, strPlatId);
-	}
-
-	return 0;
-#endif
-
 	if (p->size() != 4)
 	{
 		return -1;

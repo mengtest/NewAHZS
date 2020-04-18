@@ -76,8 +76,8 @@ class CWorldOther : public world
 
 	private:
 		CBalance m_baseBalance;
-		pthread_mutex_t m_entityMutex; 
-		pthread_mutex_t m_rpcMutex;
+		std::mutex m_entityMutex; 
+		std::mutex m_rpcMutex;
 		map<string, CEntityMailbox*> m_globalBases;
 
 		CWorldOther(const CWorldOther&);
