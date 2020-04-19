@@ -10,6 +10,10 @@ if(MSVC)
 else()
 	include_directories(hiredis/linux)
 endif()
+
+ADD_DEFINITIONS(-D__RELOGIN -DSYNC_DB_TEST -D__LUA_5_2_1 -D_USE_REDIS -D__AOI_PRUNING -D__SPEED_CHECK -D__PLUTO_ORDER -D__RELOGIN)
+
+
 # Add block directories
 add_subdirectory(tinyxml)
 add_subdirectory(lua)

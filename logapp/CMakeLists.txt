@@ -41,7 +41,7 @@ add_executable (logapp
 )
 
 if(MSVC)
-	target_link_libraries(logapp common libcurl tinyxml hiredis lua wepoll libmysql ws2_32)
+	target_link_libraries(logapp common tinyxml hiredis lua wepoll libmysql libcurl ws2_32)
 	ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
 else()
 	target_link_libraries(logapp common curl tinyxml hiredis lua mysqlclient uuid dl m libssl.a libcrypto.a)

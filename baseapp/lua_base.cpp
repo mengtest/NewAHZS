@@ -1044,17 +1044,28 @@ int LuaOpenMogoLibCBase (lua_State *L)
         {NULL, NULL}
     };
 
+#ifndef __LUA_5_2_1
+	luaL_register(L, s_szMogoLibName, mogoLib);
+	//luaL_register之后cw位于栈顶
 
-    //以下三行代码替换上面注释的代码语句。lua版本5.2中采用以下格式注册c函数，
-    //5.1版本中采用上面的方法注册c函数
-    lua_newtable(L);
-    luaL_setfuncs(L, mogoLib, 0);
+	lua_pushstring(L, "baseData");
+	lua_newtable(L);
+	lua_rawset(L, -3);
 
-    lua_pushstring(L, "baseData");
-    lua_newtable(L);
-    lua_rawset(L, -3);
+#else
 
-    lua_setglobal(L, s_szMogoLibName);
+	//以下三行代码替换上面注释的代码语句。lua版本5.2中采用以下格式注册c函数，
+	//5.1版本中采用上面的方法注册c函数
+	lua_newtable(L);
+	luaL_setfuncs(L, mogoLib, 0);
+
+	lua_pushstring(L, "baseData");
+	lua_newtable(L);
+	lua_rawset(L, -3);
+
+	lua_setglobal(L, s_szMogoLibName);
+
+#endif // !__LUA_5.2.1
 
     ClearLuaStack(L);
 

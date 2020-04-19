@@ -32,8 +32,8 @@ int main(int argc, char* argv[])
 
 #ifndef _WIN32
 	signal(SIGPIPE, SIG_IGN);
-	CDebug::Init();
 #endif
+	CDebug::Init();
 
     g_logger.SetLogPath(pszLogPath);
     CWorldBase& worldbase = GetWorldbase();

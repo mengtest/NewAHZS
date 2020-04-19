@@ -334,7 +334,11 @@ int CEpollServer::HandleNewConnection(int fd)
 	struct epoll_event ev;
 	memset(&ev, 0, sizeof ev);
 
+#ifdef _WIN32
+	ev.events = EPOLLIN;
+#else
 	ev.events = EPOLLIN | EPOLLET;
+#endif
 	ev.data.fd = new_fd;
 	if (epoll_ctl(m_epfd, EPOLL_CTL_ADD, new_fd, &ev) < 0)
 	{
@@ -359,6 +363,7 @@ int CEpollServer::HandleMailboxEvent(int fd, uint32_t event, CMailBox* pmb)
 #ifndef _WIN32
 			if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &nConnErr, &_tl) == 0)
 #else
+			nConnErr = -1;
 			if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (char*)&nConnErr, &_tl) == 0)
 #endif // !_WIN32
 
@@ -370,9 +375,24 @@ int CEpollServer::HandleMailboxEvent(int fd, uint32_t event, CMailBox* pmb)
 				}
 				else
 				{
+
+#ifdef _WIN32
+					if (nConnErr == 10061)
+					{
+						nConnErr = 111;
+						LogInfo("connect_2_mb", "connect %s:%d error:%d,%s", pmb->GetServerName().c_str(),
+							pmb->GetServerPort(), nConnErr, "Connection refused");
+					}
+					else
+					{
+						LogInfo("connect_2_mb", "connect %s:%d error:%d,%s", pmb->GetServerName().c_str(),
+							pmb->GetServerPort(), nConnErr, strerror(nConnErr));
+					}
+
+#else
 					LogInfo("connect_2_mb", "connect %s:%d error:%d,%s", pmb->GetServerName().c_str(),
 						pmb->GetServerPort(), nConnErr, strerror(nConnErr));
-
+#endif
 
 					RemoveFd(fd);
 					//int nRet = pmb->ConnectServer(m_epfd);
@@ -477,7 +497,11 @@ void CEpollServer::CloseFdFromServer(int fd)
 {
 	this->OnFdClosed(fd);
 	epoll_ctl(m_epfd, EPOLL_CTL_DEL, fd, NULL);
+#ifdef _WIN32
+	closesocket(fd);
+#else
 	::close(fd);
+#endif
 	RemoveFd(fd);
 }
 
@@ -1020,10 +1044,23 @@ int CEpollServer::HandleMessage(int fd, CMailBox* mb)
 		{
 			return 0;
 		}
+#ifdef _WIN32
+		int error_no = GetLastError();
+		if (error_no == 10057)
+		{
+			// return 0;
+		}
+		
+#endif
 		LogWarning("handle_message_err", "failed, %d,'%s'", errno, strerror(errno));
 	}
 	//LogDebug("hdm_recv_err", "fd=%d;recv=%d;err=%d", fd, nLen, errno);
+#ifdef _WIN32
+	closesocket(fd);
+#else
 	close(fd);
+#endif // _WIN32
+
 	return -1;
 }
 #endif

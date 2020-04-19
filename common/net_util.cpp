@@ -24,7 +24,7 @@ bool MogoSetNonblocking(int sockfd)
 int MogoSocket()
 {
 #ifdef _WIN32
-	return socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	return socket(AF_INET, SOCK_STREAM, 0);
 #else
 	return socket(PF_INET, SOCK_STREAM, 0);
 #endif

@@ -143,16 +143,32 @@ int CMailBox::ConnectServer(HANDLE epfd)
 
     struct epoll_event ev;
     memset(&ev, 0, sizeof ev);
-    ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+#ifdef _WIN32
+	ev.events = EPOLLIN | EPOLLOUT;
+#else
+	ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+#endif
     ev.data.fd = m_fd;
 
     if(epoll_ctl(epfd, EPOLL_CTL_ADD, m_fd, &ev) == -1)
     {
-        ERROR_RETURN2("Failed to epoll_ctl_add connect fd");
+#ifdef _WIN32
+        if (GetLastError() != 183)
+        {
+			ERROR_RETURN2("Failed to epoll_ctl_add connect fd");
+        }
+#else
+		ERROR_RETURN2("Failed to epoll_ctl_add connect fd");
+#endif
     }
 
     int nRet = MogoConnect(m_fd, GetServerName().c_str(), GetServerPort());
-    if(nRet != 0 && errno != EINPROGRESS)
+#ifdef _WIN32
+    int error_no = GetLastError();
+    if (nRet != 0 && error_no != WSAEWOULDBLOCK)
+#else
+	if (nRet != 0 && errno != EINPROGRESS)
+#endif
     {
         ERROR_RETURN2("Failed to connect");
     }

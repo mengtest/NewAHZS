@@ -99,7 +99,9 @@ int CWorldBase::init(const char* pszEtcFile)
 	char szTmp[512];
 	snprintf(szTmp, sizeof(szTmp), "package.path=package.path..';%s/base/?.lua;%s/base/?.luac'\0",
 		strLuaPath.c_str(), strLuaPath.c_str());
-	if (luaL_dostring(m_L, szTmp) != 0)
+	// std::string path_str = "package.path=package.path..';D:/macrogu.com/NewAHZS/scripts/base/?.lua;D:/macrogu.com/NewAHZS/scripts/base/?.luac'";
+	int lua_check = luaL_dostring(m_L, szTmp);
+	if (lua_check != 0)
 	{
 		return -2;
 	}

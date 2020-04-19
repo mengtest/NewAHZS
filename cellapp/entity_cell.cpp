@@ -1021,8 +1021,13 @@ void CEntityCell::OnClientMoveReq(int16_t x, int16_t y)
 #ifdef __SPEED_CHECK
 
 
+#ifdef _WIN32 
+	win_time_val_t tv;
+	if (win_gettimeofday(&tv) == 0)
+#else
 	struct timeval tv;
 	if (gettimeofday(&tv, NULL) == 0)
+#endif
 	{
 		uint32_t Now = tv.tv_usec / 1000;
 		if (this->m_nLastMoveTime != 0 && Now > this->m_nLastMoveTime)

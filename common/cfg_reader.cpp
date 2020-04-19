@@ -95,10 +95,10 @@ void CCfgReader::ScanCfgFile()
 			continue;
 		}
 
-		if (strSection.empty())
-		{
-			ThrowException(-1, "item '%s' has not section", sLine.c_str());
-		}
+// 		if (strSection.empty())
+// 		{
+// 			ThrowException(-1, "item '%s' has not section", sLine.c_str());
+// 		}
 
 		string strTemp = sLine.substr(0, pos);
 		string s1 = Trim(strTemp);

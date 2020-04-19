@@ -1,5 +1,4 @@
-#ifndef __UTIL__HEAD__
-#define __UTIL__HEAD__
+#pragma once
 
 
 #include <stdio.h>
@@ -139,24 +138,15 @@ void ClearMap(M<T1, T2, std::less<T1>, std::allocator<std::pair<const T1, T2> > 
 extern const char g_cPathSplit[2];  //路径分隔符
 
 //传入指定的速度、时间段、移动距离，校验玩家移动是否被允许
-#ifndef _WIN32
 bool CheckSpeed(uint16_t speed, uint32_t timeDiff, float dis);
-#endif
 
 extern void GetCurTime(string& strCurTime);
 extern string GetNextTime(const string& strLastTime);
 extern void GetYesterday(string& strYesterday);
 extern bool DayDiff(const string& strDayTime, int nClock);
 extern void GetDateTime(char* pszDT, size_t nLen);
-#ifndef _WIN32
 extern uint32_t _GetTickCount();
 extern uint64_t _GetTickCount64();
-#else	
-inline long _GetTickCount64()
-{
-	return 0;
-}
-#endif
 
 
 
@@ -256,4 +246,3 @@ public:
 	void Lock() { m_Mutex.lock(); };
 	void Unlock() { m_Mutex.unlock(); };
 };
-#endif		//__UTIL__HEAD__
