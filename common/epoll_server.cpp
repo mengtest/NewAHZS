@@ -334,7 +334,7 @@ int CEpollServer::HandleNewConnection(int fd)
 	struct epoll_event ev;
 	memset(&ev, 0, sizeof ev);
 
-	ev.events = EPOLLIN | EPOLLONESHOT;
+	ev.events = EPOLLIN | EPOLLET;
 	ev.data.fd = new_fd;
 	if (epoll_ctl(m_epfd, EPOLL_CTL_ADD, new_fd, &ev) < 0)
 	{

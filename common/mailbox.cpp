@@ -135,7 +135,7 @@ int CMailBox::ConnectServer(HANDLE epfd)
     }
 
     m_fd = MogoSocket();
-    //MogoSetNonblocking(m_fd);
+    MogoSetNonblocking(m_fd);
 
 	//修改rcvbuf和sndbuf
 	enum{ _BUFF_SIZE = 174760 };
@@ -143,7 +143,7 @@ int CMailBox::ConnectServer(HANDLE epfd)
 
     struct epoll_event ev;
     memset(&ev, 0, sizeof ev);
-    ev.events = EPOLLIN | EPOLLOUT | EPOLLONESHOT;
+    ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
     ev.data.fd = m_fd;
 
     if(epoll_ctl(epfd, EPOLL_CTL_ADD, m_fd, &ev) == -1)
