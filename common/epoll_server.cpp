@@ -54,6 +54,7 @@ int CEpollServer::StartServer(const char* pszAddr, uint16_t unPort)
 	if (n != 0)
 	{
 		printf("bind fail, fd=%d;pszAddr=%s;unPort=%d\n", fd, pszAddr, unPort);
+		int temp_ = GetLastError();
 		ERROR_RETURN2("Failed to bind");
 	}
 
@@ -376,6 +377,7 @@ int CEpollServer::HandleMailboxEvent(int fd, uint32_t event, CMailBox* pmb)
 #endif // !_WIN32
 
 			{
+				nConnErr = (int)(*conn_err);
 				if (nConnErr == 0)
 				{
 					pmb->SetConnected();
