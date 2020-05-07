@@ -14,8 +14,8 @@
 bool MogoSetNonblocking(int sockfd)
 {
 #ifdef _WIN32
-	int flag = 1;
-	return ioctlsocket(sockfd, FIONBIO, (unsigned long*)& flag);
+	unsigned long flag = 1;
+	return ioctlsocket(sockfd, FIONBIO, &flag);
 #else
 	return fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFD, 0) | O_NONBLOCK) != -1;
 #endif
@@ -50,7 +50,7 @@ int MogoBind(int sockfd, const char* pszAddr, unsigned int unPort)
 	int len = sizeof(int);
 
 #ifdef _WIN32
-	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const char*)& flag, len);
+	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const char*)&flag, len);
 #else
 	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &flag, len);
 #endif

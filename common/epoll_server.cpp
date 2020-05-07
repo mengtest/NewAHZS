@@ -313,7 +313,11 @@ int CEpollServer::HandleNewConnection(int fd)
 	//enum{ MAX_ACCEPT = 4000, };
 	if (m_fds.size() >= MAX_ACCEPT)
 	{
+#ifdef _WIN32
+		closesocket(new_fd);
+#else
 		::close(new_fd);
+#endif
 		LogWarning("max_connection", "closed=%d", new_fd);
 		return -3;
 	}
@@ -323,7 +327,11 @@ int CEpollServer::HandleNewConnection(int fd)
 
 	if (!this->GetWorld()->IsCanAcceptedClient(pszClientAddr))
 	{
+#ifdef _WIN32
+		closesocket(new_fd);
+#else
 		::close(new_fd);
+#endif
 		LogWarning("can not accepted client", "connected from %s:%d;assigned socket is:%d", pszClientAddr, unClientPort, new_fd);
 		return -4;
 	}
@@ -363,8 +371,8 @@ int CEpollServer::HandleMailboxEvent(int fd, uint32_t event, CMailBox* pmb)
 #ifndef _WIN32
 			if (getsockopt(fd, SOL_SOCKET, SO_ERROR, &nConnErr, &_tl) == 0)
 #else
-			nConnErr = -1;
-			if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (char*)&nConnErr, &_tl) == 0)
+			char* conn_err = new char;
+			if (getsockopt(fd, SOL_SOCKET, SO_ERROR, conn_err, &_tl) == 0)
 #endif // !_WIN32
 
 			{
@@ -377,17 +385,17 @@ int CEpollServer::HandleMailboxEvent(int fd, uint32_t event, CMailBox* pmb)
 				{
 
 #ifdef _WIN32
-					if (nConnErr == 10061)
-					{
-						nConnErr = 111;
-						LogInfo("connect_2_mb", "connect %s:%d error:%d,%s", pmb->GetServerName().c_str(),
-							pmb->GetServerPort(), nConnErr, "Connection refused");
-					}
-					else
-					{
-						LogInfo("connect_2_mb", "connect %s:%d error:%d,%s", pmb->GetServerName().c_str(),
-							pmb->GetServerPort(), nConnErr, strerror(nConnErr));
-					}
+// 					if (nConnErr == 10061)
+// 					{
+// 						nConnErr = 111;
+// 						LogInfo("connect_2_mb", "connect %s:%d error:%d,%s", pmb->GetServerName().c_str(),
+// 							pmb->GetServerPort(), nConnErr, "Connection refused");
+// 					}
+// 					else
+// 					{
+// 						LogInfo("connect_2_mb", "connect %s:%d error:%d,%s", pmb->GetServerName().c_str(),
+// 							pmb->GetServerPort(), nConnErr, strerror(nConnErr));
+// 					}
 
 #else
 					LogInfo("connect_2_mb", "connect %s:%d error:%d,%s", pmb->GetServerName().c_str(),
@@ -510,7 +518,11 @@ void CEpollServer::KickOffFd(int fd)
 {
 	epoll_ctl(m_epfd, EPOLL_CTL_DEL, fd, NULL);
 	RemoveFd(fd);
+#ifdef _WIN32
+	closesocket(fd);
+#else
 	::close(fd);
+#endif
 }
 
 //连接其他服务器mailbox会直接调用这个方法
@@ -1046,9 +1058,9 @@ int CEpollServer::HandleMessage(int fd, CMailBox* mb)
 		}
 #ifdef _WIN32
 		int error_no = GetLastError();
-		if (error_no == 10057)
+		if (error_no == 10035 || error_no == 10054)
 		{
-			// return 0;
+			return 0;
 		}
 		
 #endif
@@ -1223,7 +1235,11 @@ int CEpollServer::CheckPlutoHeadSize(int fd, CMailBox* mb, uint32_t nMsgLen)
 	if (nMsgLen < PLUTO_FILED_BEGIN_POS)
 	{
 		LogWarning("CEpollServer::CheckPlutoHeadSize", "handle_message_err message_length_err,size=%d,min=%d", nMsgLen, PLUTO_FILED_BEGIN_POS);
-		close(fd);
+#ifdef _WIN32
+		closesocket(fd);
+#else
+		::close(fd);
+#endif
 		return -2;
 	}
 	if (mb->GetAuthz() != MAILBOX_CLIENT_TRUSTED)
@@ -1231,7 +1247,11 @@ int CEpollServer::CheckPlutoHeadSize(int fd, CMailBox* mb, uint32_t nMsgLen)
 		if (nMsgLen > PLUTO_CLIENT_MSGLEN_MAX)
 		{
 			LogWarning("CEpollServer::CheckPlutoHeadSize", "handle_message_err max_message_length,size=%d,max=%d", nMsgLen, PLUTO_CLIENT_MSGLEN_MAX);
-			close(fd);
+#ifdef _WIN32
+			closesocket(fd);
+#else
+			::close(fd);
+#endif
 			return -3;
 		}
 	}

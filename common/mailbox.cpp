@@ -152,14 +152,6 @@ int CMailBox::ConnectServer(HANDLE epfd)
 
     if(epoll_ctl(epfd, EPOLL_CTL_ADD, m_fd, &ev) == -1)
     {
-#ifdef _WIN32
-        if (GetLastError() != 183)
-        {
-			ERROR_RETURN2("Failed to epoll_ctl_add connect fd");
-        }
-#else
-		ERROR_RETURN2("Failed to epoll_ctl_add connect fd");
-#endif
     }
 
     int nRet = MogoConnect(m_fd, GetServerName().c_str(), GetServerPort());
